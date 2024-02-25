@@ -5,6 +5,7 @@ public enum UserRoleEnum {
   OWNER(Authority.OWNER),
   MANAGER(Authority.MANAGER);
 
+
   private final String authority;
 
   UserRoleEnum(String authority) {

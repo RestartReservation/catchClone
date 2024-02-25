@@ -1,6 +1,8 @@
 package com.example.catchclone.review.entity;
 
 import com.example.catchclone.review.dto.ReviewRequestDto;
+import com.example.catchclone.user.entity.User;
+import com.example.catchclone.util.TimeStamped;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

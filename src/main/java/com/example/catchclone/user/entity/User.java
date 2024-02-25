@@ -1,5 +1,6 @@
 package com.example.catchclone.user.entity;
 
+import com.example.catchclone.util.TimeStamped;
 import com.example.catchclone.util.enums.UserRoleEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User extends TimeStamped {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,9 +2,11 @@ package com.example.catchclone.review.controller;
 
 import static com.example.catchclone.review.controller.ReviewController.REVIEW_URI_API;
 
+import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.review.dto.ReviewRequestDto;
 import com.example.catchclone.review.dto.ReviewResponseDto;
 import com.example.catchclone.review.service.ReviewServiceImpl;
+import com.example.catchclone.security.UserDetailsImpl;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequiredArgsConstructor

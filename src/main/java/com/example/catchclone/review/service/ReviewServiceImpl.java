@@ -1,10 +1,12 @@
 package com.example.catchclone.review.service;
 
+import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.review.dao.ReviewRepository;
 import com.example.catchclone.review.dto.ReviewRequestDto;
 import com.example.catchclone.review.dto.ReviewResponseDto;
 import com.example.catchclone.review.entity.Review;
 import com.example.catchclone.review.service.interfaces.ReviewService;
+import com.example.catchclone.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

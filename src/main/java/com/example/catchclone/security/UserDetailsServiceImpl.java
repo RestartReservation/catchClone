@@ -1,5 +1,8 @@
 package com.example.catchclone.security;
 
+
+import com.example.catchclone.user.entity.User;
+import com.example.catchclone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

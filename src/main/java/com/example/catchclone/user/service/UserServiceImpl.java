@@ -1,17 +1,19 @@
 package com.example.catchclone.user.service;
 
-import com.example.catchclone.jwt.JwtUtil;
+
 import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.user.dto.UserLoginRequestDto;
 import com.example.catchclone.user.dto.UserRequestDto;
 import com.example.catchclone.user.entity.User;
 import com.example.catchclone.user.repository.UserRepository;
+import com.example.catchclone.util.JwtUtil;
 import com.example.catchclone.util.enums.UserRoleEnum;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -22,7 +24,7 @@ public class UserServiceImpl implements UserService{
   private final PasswordEncoder passwordEncoder;
   private final JwtUtil jwtUtil;
 
-  @Override
+  @Override //Transactional 넣어주세요
   public StatusResponseDto signUp(UserRequestDto userRequestDto) {
 
     if(userRepository.existsByUsername(userRequestDto.username())) return new StatusResponseDto(400,"Already exist!");
@@ -60,5 +62,14 @@ public class UserServiceImpl implements UserService{
 
 
     return new StatusResponseDto(201,"success!");
+  }
+
+  @Override
+  @Transactional
+  public User findUserByUserId(Long userId) {
+    return userRepository.findById(userId).orElseThrow(
+        () -> new IllegalArgumentException("유효하지 않은 Id입니다")
+    );
+
   }
 }

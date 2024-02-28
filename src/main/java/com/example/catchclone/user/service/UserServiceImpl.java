@@ -1,11 +1,12 @@
 package com.example.catchclone.user.service;
 
-import com.example.catchclone.jwt.JwtUtil;
+
 import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.user.dto.UserLoginRequestDto;
 import com.example.catchclone.user.dto.UserRequestDto;
 import com.example.catchclone.user.entity.User;
 import com.example.catchclone.user.repository.UserRepository;
+import com.example.catchclone.util.JwtUtil;
 import com.example.catchclone.util.enums.UserRoleEnum;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;

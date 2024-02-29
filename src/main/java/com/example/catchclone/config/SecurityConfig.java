@@ -56,7 +56,8 @@ public class SecurityConfig {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
         .authorizeHttpRequests(request -> request
-            .requestMatchers(new AntPathRequestMatcher("/**"))
+            //.requestMatchers(new AntPathRequestMatcher("/**"))
+            .requestMatchers(new AntPathRequestMatcher("/ct/user/**"))
             .permitAll()
             .anyRequest().authenticated());
 //

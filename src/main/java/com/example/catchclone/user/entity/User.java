@@ -42,9 +42,6 @@ public class User extends TimeStamped {
   private String phoneNumber;
 
   @Column
-  private LocalDateTime createdAt;
-
-  @Column
   private String aboutMe;
 
   @Column

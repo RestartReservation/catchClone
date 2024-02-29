@@ -2,6 +2,7 @@ package com.example.catchclone.review.entity;
 
 import com.example.catchclone.comment.entity.Comment;
 import com.example.catchclone.review.dto.ReviewRequestDto;
+import com.example.catchclone.review.dto.UpdateReviewRequestDto;
 import com.example.catchclone.user.entity.User;
 import com.example.catchclone.util.TimeStamped;
 import jakarta.persistence.CascadeType;
@@ -74,7 +75,7 @@ public class Review extends TimeStamped {
     return Objects.equals(user.getId(), review.getUserId());
   }
 
-  public void update(ReviewRequestDto reviewRequestDto) {
+  public void update(UpdateReviewRequestDto reviewRequestDto) {
     this.reviewContent = reviewRequestDto.reviewContent();
     this.tasteRating = reviewRequestDto.tasteRating();
     this.atmosphereRating = reviewRequestDto.atmosphereRating();

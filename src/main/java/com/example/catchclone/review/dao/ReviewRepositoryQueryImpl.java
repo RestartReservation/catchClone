@@ -1,13 +1,16 @@
 package com.example.catchclone.review.dao;
 
+import static com.example.catchclone.like.entity.reviewLike.QReviewLike.reviewLike;
 import static com.example.catchclone.review.entity.QReview.review;
 
 import com.example.catchclone.review.dto.ReviewResponseDto;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
   private final JPAQueryFactory jpaQueryFactory;
-
   @Override
   @Transactional
   public Optional<ReviewResponseDto> responseReviewDtoByReviewId(Long reviewId) {
@@ -31,10 +33,20 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                     , review.serviceRating
                     , review.totalRating
                     , review.createdAt
-            )
+                    , ExpressionUtils.as
+                        (
+                            JPAExpressions.select(Wildcard.count)
+                                .from(reviewLike)
+                                .leftJoin(reviewLike.review)
+                                .where(reviewLikeEqByReviewId(reviewId)),
+                            "likeCount"))
             )
             .from(review)
             .where(review.id.eq(reviewId))
             .fetchFirst());
+  }
+
+  private BooleanExpression reviewLikeEqByReviewId(Long reviewId) {
+    return Objects.nonNull(reviewId) ? reviewLike.review.id.eq(reviewId) : null;
   }
 }

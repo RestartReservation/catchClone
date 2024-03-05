@@ -3,6 +3,7 @@ package com.example.catchclone.like.entity.commentLike;
 
 import com.example.catchclone.comment.entity.Comment;
 import com.example.catchclone.user.entity.User;
+import com.example.catchclone.util.TimeStamped;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class CommentLike {
+public class CommentLike extends TimeStamped {
   @EmbeddedId
   private CommentLikeId commentLikeId;
 

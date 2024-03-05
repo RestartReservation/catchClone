@@ -19,4 +19,5 @@ public class CommentLikeRepositoryQueryImpl implements CommentLikeRepositoryQuer
     return jpaQueryFactory.from(commentLike).where(commentLike.commentLikeId.eq(commentLikeId)).select(commentLike.commentLikeId)
         .setHint("org.hibernate.readOnly", true).fetchFirst() != null;
   }
+
 }

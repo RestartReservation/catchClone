@@ -1,7 +1,9 @@
 package com.example.catchclone.user.entity;
 
+import com.example.catchclone.like.entity.commentLike.CommentLike;
 import com.example.catchclone.util.TimeStamped;
 import com.example.catchclone.util.enums.UserRoleEnum;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,7 +11,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -58,4 +63,7 @@ public class User extends TimeStamped {
     this.role = role;
   }
 
+  //연관관계
+  @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+  private Set<CommentLike> commentLikes = new HashSet<>();
 }

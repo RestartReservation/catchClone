@@ -1,6 +1,7 @@
 package com.example.catchclone.user.entity;
 
 import com.example.catchclone.like.entity.commentLike.CommentLike;
+import com.example.catchclone.like.entity.reviewLike.ReviewLike;
 import com.example.catchclone.util.TimeStamped;
 import com.example.catchclone.util.enums.UserRoleEnum;
 import jakarta.persistence.CascadeType;
@@ -64,6 +65,9 @@ public class User extends TimeStamped {
   }
 
   //연관관계
+  @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+  private Set<ReviewLike> reviewLikes = new HashSet<>();
+
   @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
   private Set<CommentLike> commentLikes = new HashSet<>();
 }

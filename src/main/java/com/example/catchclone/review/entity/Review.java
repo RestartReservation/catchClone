@@ -1,6 +1,7 @@
 package com.example.catchclone.review.entity;
 
 import com.example.catchclone.comment.entity.Comment;
+import com.example.catchclone.like.entity.reviewLike.ReviewLike;
 import com.example.catchclone.review.dto.ReviewRequestDto;
 import com.example.catchclone.review.dto.UpdateReviewRequestDto;
 import com.example.catchclone.user.entity.User;
@@ -12,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -70,6 +72,8 @@ public class Review extends TimeStamped {
   @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Comment> comments = new LinkedHashSet<>();
 
+  @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<ReviewLike> likes = new HashSet<>();
   //메서드
   public boolean isWriter(User user,Review review){
     return Objects.equals(user.getId(), review.getUserId());

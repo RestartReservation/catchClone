@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService{
   private final JwtUtil jwtUtil;
 
   @Override //Transactional 넣어주세요
+  @Transactional
   public StatusResponseDto signUp(UserRequestDto userRequestDto) {
 
     if(userRepository.existsByUsername(userRequestDto.username())) return new StatusResponseDto(400,"Already exist!");

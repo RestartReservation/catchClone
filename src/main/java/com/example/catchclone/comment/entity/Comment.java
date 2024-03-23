@@ -35,6 +35,12 @@ public class Comment extends TimeStamped {
   @Column
   private String commentContent;
 
+  @Column
+  private Integer layer = 0;
+
+  @Column
+  private Long parentId = null;
+
   //생성자
   @Builder
   public Comment(Long userId, Review review, String commentContent){
@@ -57,5 +63,9 @@ public class Comment extends TimeStamped {
 
   public void update(CommentRequestDto commentRequestDto) {
     this.commentContent = commentRequestDto.commentContents();
+  }
+  public void setChildComment(Integer layer,Long parentId){
+    this.layer = layer;
+    this.parentId = parentId;
   }
 }

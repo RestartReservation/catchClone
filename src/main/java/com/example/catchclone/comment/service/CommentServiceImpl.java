@@ -24,18 +24,17 @@ import org.springframework.stereotype.Service;
 public class CommentServiceImpl implements CommentService {
   private CommentRepository commentRepository;
   private UserRepository userRepository;
-  private ReviewRepository reviewRepository;
+  private ReviewService reviewService;
   @Override
   @Transactional
   public StatusResponseDto addComment(User user, CommentRequestDto commentRequestDto,Long reviewId) {
-    Review review = reviewRepository.findById(reviewId).orElseThrow(
-        () -> new IllegalArgumentException("유효하지 않은 정보입니다")
-    );
+    Review review = reviewService.findReviewByReviewId(reviewId);
     Comment comment = Comment.builder()
         .userId(user.getId())
         .commentContent(commentRequestDto.commentContents())
         .review(review)
         .build();
+    if(commentRequestDto.isChild()) setChildComment(comment, commentRequestDto.parentId());
     commentRepository.save(comment);
     return new StatusResponseDto(200,"OK");
   }
@@ -92,6 +91,10 @@ public class CommentServiceImpl implements CommentService {
     );
   }
 
+  private void setChildComment(Comment childComment, Long parentId){
+    Comment parentComment = findCommentByCommentId(parentId);
+    childComment.setChildComment(parentComment.getLayer() + 1, parentComment.getParentId());
+  }
 
 }
 

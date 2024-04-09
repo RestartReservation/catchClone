@@ -70,9 +70,8 @@ public class CommentRepositoryQueryImpl implements CommentRepositoryQuery{
                         "likeCount"))
         )
         .from(comment)
-        .leftJoin(user)
-        .where(comment.userId.eq(userId),
-            user.id.eq(comment.userId))
+        .leftJoin(user).on(user.id.eq(comment.userId))
+        .where(comment.userId.eq(userId))
         .fetch();
   }
 
@@ -98,9 +97,8 @@ public class CommentRepositoryQueryImpl implements CommentRepositoryQuery{
                         "likeCount")
             ))
         .from(comment)
-        .leftJoin(user)
-        .where(comment.review.id.eq(reviewId),
-            user.id.eq(comment.userId))
+        .leftJoin(user).on(user.id.eq(comment.userId))
+        .where(comment.review.id.eq(reviewId))
         .fetch();
   }
 

@@ -24,10 +24,6 @@ public class Store extends TimeStamped {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name="user_id")
-  private User user;
-
   @Column
   private String storeName; //가맹점이름
 
@@ -93,4 +89,9 @@ public class Store extends TimeStamped {
   public Store(String storeName){
     this.storeName = storeName;
   }
+
+  //연관관계
+  @ManyToOne
+  @JoinColumn(name="user_id")
+  private User user;
 }

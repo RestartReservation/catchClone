@@ -2,18 +2,22 @@ package com.example.catchclone.store.service;
 
 import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.store.dto.StoreCategoryDto;
+import com.example.catchclone.store.dto.StoreIndexResponseDto;
 import com.example.catchclone.store.dto.StoreMenuDto;
+import com.example.catchclone.store.dto.StorePageDto;
 import com.example.catchclone.store.dto.StoreRequestDto;
 import com.example.catchclone.store.entity.Store;
 import com.example.catchclone.store.entity.StoreCategory;
 import com.example.catchclone.store.entity.StoreMenu;
-import com.example.catchclone.store.repository.StoreCategoryRepository;
-import com.example.catchclone.store.repository.StoreMenuRepository;
-import com.example.catchclone.store.repository.StoreRepository;
+import com.example.catchclone.store.dao.StoreCategoryRepository;
+import com.example.catchclone.store.dao.StoreMenuRepository;
+import com.example.catchclone.store.dao.StoreRepository;
 import com.example.catchclone.user.entity.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +29,7 @@ public class StoreServiceImpl implements StoreService{
   private final StoreCategoryRepository storeCategoryRepository;
 
   @Override
+  @Transactional
   public StatusResponseDto addMenu(User user,Long storeId,List<StoreMenuDto> storeMenuDtoList) {
 
     Store store = storeRepository.findById(storeId).orElseThrow(
@@ -45,6 +50,7 @@ public class StoreServiceImpl implements StoreService{
   }
 
   @Override
+  @Transactional
   public StatusResponseDto addStore(StoreRequestDto storeRequestDto, User user) {
 
     if(storeRepository.findByStoreName(storeRequestDto.getStoreName()).isPresent())
@@ -58,6 +64,7 @@ public class StoreServiceImpl implements StoreService{
   }
 
   @Override
+  @Transactional
   public StatusResponseDto addCategory(Long storeId, StoreCategoryDto storeCategoryDto, User user) {
 
     Store store = storeRepository.findById(storeId).orElseThrow(
@@ -76,4 +83,12 @@ public class StoreServiceImpl implements StoreService{
     storeCategoryRepository.save(storeCategory);
     return new StatusResponseDto(201,"카테코리 정보 등록이 완료되었습니다!");
   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<StoreIndexResponseDto> getStores(StorePageDto storePageDto) {
+    return storeRepository.getStores(storePageDto);
+  }
+
+
 }

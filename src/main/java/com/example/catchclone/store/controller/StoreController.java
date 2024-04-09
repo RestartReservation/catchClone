@@ -3,6 +3,7 @@ package com.example.catchclone.store.controller;
 import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.security.UserDetailsImpl;
 import com.example.catchclone.store.dto.StoreCategoryDto;
+import com.example.catchclone.store.dto.StoreDetailsResponseDto;
 import com.example.catchclone.store.dto.StoreIndexResponseDto;
 import com.example.catchclone.store.dto.StoreMenuDto;
 import com.example.catchclone.store.dto.StorePageDto;
@@ -58,6 +59,14 @@ public class StoreController {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return ResponseEntity.ok().headers(headers).body(storeList);
+  }
+
+  @GetMapping("/stores/{storeId}")
+  public ResponseEntity<StoreDetailsResponseDto> getStore(@PathVariable Long storeId){
+    StoreDetailsResponseDto storeDetails = storeService.getStore(storeId);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+    return ResponseEntity.ok().headers(headers).body(storeDetails);
   }
 
 }

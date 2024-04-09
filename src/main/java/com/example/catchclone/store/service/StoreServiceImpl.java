@@ -2,6 +2,7 @@ package com.example.catchclone.store.service;
 
 import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.store.dto.StoreCategoryDto;
+import com.example.catchclone.store.dto.StoreDetailsResponseDto;
 import com.example.catchclone.store.dto.StoreIndexResponseDto;
 import com.example.catchclone.store.dto.StoreMenuDto;
 import com.example.catchclone.store.dto.StorePageDto;
@@ -88,6 +89,21 @@ public class StoreServiceImpl implements StoreService{
   @Transactional(readOnly = true)
   public Page<StoreIndexResponseDto> getStores(StorePageDto storePageDto) {
     return storeRepository.getStores(storePageDto);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public StoreDetailsResponseDto getStore(Long storeId) {
+    Store store = findStoreByStoreId(storeId);
+    return StoreDetailsResponseDto.from(store);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Store findStoreByStoreId(Long storeId) {
+    return storeRepository.findById(storeId).orElseThrow(
+        () -> new IllegalArgumentException("일치하는 정보가 없습니다")
+    );
   }
 
 

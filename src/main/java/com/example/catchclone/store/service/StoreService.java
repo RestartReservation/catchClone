@@ -2,6 +2,7 @@ package com.example.catchclone.store.service;
 
 import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.store.dto.StoreCategoryDto;
+import com.example.catchclone.store.dto.StoreDetailsResponseDto;
 import com.example.catchclone.store.dto.StoreIndexResponseDto;
 import com.example.catchclone.store.dto.StoreMenuDto;
 import com.example.catchclone.store.dto.StorePageDto;
@@ -19,6 +20,8 @@ public interface StoreService {
   StatusResponseDto addMenu(User user,Long storeId,List<StoreMenuDto> storeMenuDtoList);
 
   StatusResponseDto addCategory(Long storeId, StoreCategoryDto storeCategoryDto,User user);
-
   Page<StoreIndexResponseDto> getStores(StorePageDto storePageDto);
+  StoreDetailsResponseDto getStore(Long storeId);
+
+  Store findStoreByStoreId(Long storeId);
 }

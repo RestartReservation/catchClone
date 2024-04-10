@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("ct/stores")
+@RequestMapping("ct/reservation")
 public class ReservationController {
 
   private final ReservationService reservationService;
@@ -59,7 +59,7 @@ public class ReservationController {
   }
 
   //예약하기
-  @PostMapping("/reservation/{storeId}/{dayId}")
+  @PostMapping("/{storeId}/{dayId}")
   public void addReservation(@PathVariable Long storeId,@PathVariable Long dayId,@RequestBody
       ReservationRequestDto reservationRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
@@ -67,7 +67,7 @@ public class ReservationController {
   }
 
   //예약 취소하기
-  @PutMapping("/reservation/{reservationId}")
+  @PutMapping("/{reservationId}")
   public ResponseEntity<StatusResponseDto> cancelReservation(@PathVariable Long reservationId,@AuthenticationPrincipal UserDetailsImpl userDetails){
 
 

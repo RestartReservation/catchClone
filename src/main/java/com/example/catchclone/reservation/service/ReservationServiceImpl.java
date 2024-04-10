@@ -80,6 +80,27 @@ public class ReservationServiceImpl implements ReservationService{
 
   @Override
   @Transactional
+  public StatusResponseDto cancelReservation(Long reservationId, User user) {
+
+    Reservation reservation = reservationRepository.findById(reservationId)
+        .orElseThrow( () -> new IllegalArgumentException("해당 예약 정보가 없습니다!"));
+
+    if(reservation.getUser().getId()!=user.getId()) throw new IllegalArgumentException("예약자만 해당 예약을 췩소할 수 있습니다!");
+
+    Long reservationDayInfoId = reservation.getReservationDayInfoId();
+
+    ReservationDayInfo reservationDayInfo = reservationDayInfoRepository.findById(reservationDayInfoId).orElseThrow(
+        () -> new IllegalArgumentException("일 예약 정보를 찾을 수 없습니다!")
+    );
+    reservationRepository.updateReservationFlag(reservationId);
+    reservationDayInfoRepository.updateCapacity(reservation.getReservationDayInfoId(),reservation.getReservationCount() + reservationDayInfo.getCapacity());
+
+    return new StatusResponseDto(201,"해당 가맹점의 예약이 취소되었습니다!");
+
+  }
+
+  @Override
+  @Transactional
   @Synchronized // 중복 예약 방지를 위해
   public void addReservation(Long storeId,Long dayId, ReservationRequestDto reservationRequestDto,User user) {
     //가게 있는지 확인
@@ -118,6 +139,7 @@ public class ReservationServiceImpl implements ReservationService{
 
     reservationRepository.save(forAddreservation);
     reservationDayInfoRepository.updateCapacity(dayId,reservationDayInfo.getCapacity()-forAddreservation.getReservationCount());
+
 
   }
 

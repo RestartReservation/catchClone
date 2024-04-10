@@ -8,4 +8,6 @@ public interface ReservationQuery {
 
   List<Reservation> findByUserIdAndDayId(Long userId,Long dayId);
 
+  void updateReservationFlag(Long reservationId);
+
 }

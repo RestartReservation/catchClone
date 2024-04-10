@@ -21,4 +21,13 @@ public class ReservationQueryImpl implements ReservationQuery{
 
 
   }
+
+  @Override
+  public void updateReservationFlag(Long reservationId) {
+
+    jpaQueryFactory.update(reservation)
+        .set(reservation.reservationStatus,"N")
+        .where(reservation.id.eq(reservationId))
+        .execute();
+  }
 }

@@ -24,6 +24,14 @@ public class ReservationDayInfoRepositoryQueryImpl implements ReservationDayInfo
   }
 
   @Override
+  public void plusCapacity(Long reservationDayInfoId, Integer capacity) {
+    jpaQueryFactory.update(reservationDayInfo)
+        .set(reservationDayInfo.capacity,capacity)
+        .where(reservationDayInfo.id.eq(reservationDayInfoId))
+        .execute();
+  }
+
+  @Override
   public List<ReservationDayInfoResponseDto> reservationDayInfoByMonthId(Long monthId) {
 
     List<ReservationDayInfoResponseDto> result =

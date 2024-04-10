@@ -1,4 +1,4 @@
-package com.example.catchclone.store.repository;
+package com.example.catchclone.store.dao;
 
 import com.example.catchclone.store.entity.StoreMenu;
 import org.springframework.data.repository.Repository;

@@ -9,6 +9,6 @@ public interface ReservationRepository extends Repository<Reservation,Long>,Rese
 
   void save(Reservation reservation);
 
-
+  Optional<Reservation> findById(Long reservationId);
 
 }

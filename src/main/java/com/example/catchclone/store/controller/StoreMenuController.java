@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ct/shop/menu")
+@RequestMapping("/ct/stores/menu")
 public class StoreMenuController {
 
 

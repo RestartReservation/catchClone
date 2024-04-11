@@ -26,20 +26,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ct/shop")
+@RequestMapping("/ct/stores")
 public class StoreController {
 
 
   private final StoreService storeService;
 
-  @PostMapping("/addShopInfo")
+  @PostMapping
   public ResponseEntity<StatusResponseDto> addStore(@RequestBody StoreRequestDto storeRequestDto,
       @AuthenticationPrincipal
       UserDetailsImpl userDetails) {
     return ResponseEntity.ok().body(storeService.addStore(storeRequestDto, userDetails.getUser()));
   }
 
-  @PostMapping("/addShopMenu/{storeId}")
+  @PostMapping("/{storeId}")
   public ResponseEntity<StatusResponseDto> addMenu(@PathVariable Long storeId,
       @RequestBody List<StoreMenuDto> storeMenuDtoList,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -47,13 +47,13 @@ public class StoreController {
         .body(storeService.addMenu(userDetails.getUser(), storeId, storeMenuDtoList));
   }
 
-  @PostMapping("/addCategory/{storeId}")
+  @PostMapping("/categories/{storeId}")
   public ResponseEntity<StatusResponseDto> addCategory(@PathVariable Long storeId,@RequestBody
       StoreCategoryDto storeCategoryDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
     return ResponseEntity.ok()
         .body(storeService.addCategory(storeId,storeCategoryDto,userDetails.getUser()));
   }
-  @GetMapping("/stores")
+  @GetMapping
   public ResponseEntity<Page<StoreIndexResponseDto>> getStores(StorePageDto storePageDto){
     Page<StoreIndexResponseDto> storeList = storeService.getStores(storePageDto);
     HttpHeaders headers = new HttpHeaders();
@@ -61,7 +61,7 @@ public class StoreController {
     return ResponseEntity.ok().headers(headers).body(storeList);
   }
 
-  @GetMapping("/stores/{storeId}")
+  @GetMapping("/{storeId}")
   public ResponseEntity<StoreDetailsResponseDto> getStore(@PathVariable Long storeId){
     StoreDetailsResponseDto storeDetails = storeService.getStore(storeId);
     HttpHeaders headers = new HttpHeaders();

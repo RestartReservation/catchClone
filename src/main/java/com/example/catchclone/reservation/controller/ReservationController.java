@@ -12,6 +12,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,13 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ct/reservation")
+@RequestMapping("/ct/reservations")
 public class ReservationController {
 
   private final ReservationService reservationService;
 
   // 가게 월 예약 정보 등록
-  @PostMapping("/AddReservationMonthInfo/{storeId}")
+  @PostMapping("/month/{storeId}")
   public ResponseEntity<StatusResponseDto> addMonthReservationInfo(@PathVariable Long storeId,@RequestBody ReservationMonthRequestDto reservationMonthRequestDto,@AuthenticationPrincipal
       UserDetailsImpl userDetails){
 
@@ -36,7 +38,7 @@ public class ReservationController {
   }
 
   // 가게 일 예약 정보 등록
-  @PostMapping("/AddReservationDayInfo/{monthInfoId}")
+  @PostMapping("/day/{monthInfoId}")
   public ResponseEntity<StatusResponseDto> addDayReservationInfo(@PathVariable Long monthInfoId,@RequestBody ReservationDayRequestDto reservationDayRequestDto,@AuthenticationPrincipal
   UserDetailsImpl userDetails){
 
@@ -45,14 +47,13 @@ public class ReservationController {
   }
 
   //해당 가맹점 월 예약 정보 조회
-  @PostMapping("/ShowReservationMonthInfo/{storeId}")
+  @GetMapping("/month/{storeId}")
   public List<ReservationMonthInfoResponseDto> showReservationMonthInfo(@PathVariable Long storeId,@AuthenticationPrincipal UserDetailsImpl userDetails){
-
     return reservationService.showReservationMonthInfo(storeId,userDetails.getUser());
   }
 
   //해당 가맹점 일 예약 정보 조회
-  @PostMapping("/ShowReservationDayInfo/{monthId}")
+  @GetMapping("/day/{monthId}")
   public List<ReservationDayInfoResponseDto> showReservationDayInfo(@PathVariable Long monthId,@AuthenticationPrincipal UserDetailsImpl userDetails){
 
     return reservationService.showReservationDayInfo(monthId,userDetails.getUser());

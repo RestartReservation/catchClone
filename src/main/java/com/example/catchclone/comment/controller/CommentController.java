@@ -44,7 +44,7 @@ public class CommentController {
     return ResponseEntity.ok().headers(headers).body(commentResponseDto);
   }
 
-  @GetMapping("/{reviewId}")
+  @GetMapping("/reviews/{reviewId}")
   public ResponseEntity<List<CommentResponseDto>> getReviewComments(@PathVariable Long reviewId){
     List<CommentResponseDto> commentResponseDtos = commentService.getReviewComments(reviewId);
     HttpHeaders headers = new HttpHeaders();
@@ -52,7 +52,7 @@ public class CommentController {
     return ResponseEntity.ok().headers(headers).body(commentResponseDtos);
   }
 
-  @GetMapping("/{userId}")
+  @GetMapping("/users/{userId}")
   public ResponseEntity<List<CommentResponseDto>>getUserComments(@PathVariable Long userId){
     List<CommentResponseDto> commentResponseDtos = commentService.getUserComments(userId);
     HttpHeaders headers = new HttpHeaders();

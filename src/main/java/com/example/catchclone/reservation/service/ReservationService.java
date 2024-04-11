@@ -21,4 +21,6 @@ public interface ReservationService {
   List<ReservationDayInfoResponseDto> showReservationDayInfo(Long monthId,User user);
 
   void addReservation(Long storeId,Long dayId,ReservationRequestDto reservationRequestDto,User user);
+
+  StatusResponseDto cancelReservation(Long reservationId,User user);
 }

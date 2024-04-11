@@ -9,4 +9,6 @@ public interface ReservationDayInfoRepositoryQuery {
   List<ReservationDayInfoResponseDto> reservationDayInfoByMonthId(Long storeId);
 
   void updateCapacity(Long dayId,Integer minusCount);
+
+  void plusCapacity(Long reservationDayInfoId,Integer capacity);
 }

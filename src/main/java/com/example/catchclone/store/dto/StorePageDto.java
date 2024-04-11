@@ -27,13 +27,14 @@ public class StorePageDto {
   int starCut;
 
   public Pageable toPageable() {
-    return Objects.isNull(sortBy) ? PageRequest.of(page, size,
-        Sort.by("createdAt").descending()) : sortBy();
-  }
-  public Pageable sortBy(){
+    if(Objects.nonNull(sortBy)){
+         return isAsc ? PageRequest.of(page, size,
+          Sort.by(sortBy).descending()) : PageRequest.of(page, size,
+          Sort.by(sortBy).ascending());
+    }
     return isAsc ? PageRequest.of(page, size,
-        Sort.by(sortBy).descending()) : PageRequest.of(page, size,
-        Sort.by(sortBy).ascending());
+        Sort.by("createdAt").descending()) : PageRequest.of(page, size,
+        Sort.by("createdAt").ascending());
   }
 
 }

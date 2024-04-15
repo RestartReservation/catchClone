@@ -1,9 +1,8 @@
-package com.example.catchclone.reservation.repository.day;
+package com.example.catchclone.reservation.dao.day;
 
 import com.example.catchclone.reservation.dto.ReservationDayInfoResponseDto;
 import static com.example.catchclone.reservation.entity.QReservationDayInfo.reservationDayInfo;
 
-import com.example.catchclone.reservation.entity.ReservationDayInfo;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;

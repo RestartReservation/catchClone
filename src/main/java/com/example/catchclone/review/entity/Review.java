@@ -55,16 +55,28 @@ public class Review extends TimeStamped {
   private Float totalRating;  //모든별점평균
 
 
+//  @Builder
+//  public Review(Long id, Long userId, Long storeId, Long reservationId, String reviewContent, Float tasteRating, Float atmosphereRating, Float serviceRating){
+//    this.id = id;
+//    this.userId = userId;
+//    this.storeId = storeId;
+//    this.reservationId = reservationId;
+//    this.reviewContent = reviewContent;
+//    this.tasteRating = tasteRating;
+//    this.atmosphereRating = atmosphereRating;
+//    this.serviceRating = serviceRating;
+//    this.totalRating = (tasteRating + atmosphereRating + serviceRating) / 3;
+//  }
+
   @Builder
-  public Review(Long id, Long userId, Long storeId, Long reservationId, String reviewContent, Float tasteRating, Float atmosphereRating, Float serviceRating){
-    this.id = id;
+  public Review(Long userId,Long storeId,Long reservationId,ReviewRequestDto reviewRequestDto){
     this.userId = userId;
     this.storeId = storeId;
     this.reservationId = reservationId;
-    this.reviewContent = reviewContent;
-    this.tasteRating = tasteRating;
-    this.atmosphereRating = atmosphereRating;
-    this.serviceRating = serviceRating;
+    this.reviewContent = reviewRequestDto.reviewContent();
+    this.tasteRating = reviewRequestDto.tasteRating();
+    this.atmosphereRating = reviewRequestDto.atmosphereRating();
+    this.serviceRating = reviewRequestDto.serviceRating();
     this.totalRating = (tasteRating + atmosphereRating + serviceRating) / 3;
   }
 

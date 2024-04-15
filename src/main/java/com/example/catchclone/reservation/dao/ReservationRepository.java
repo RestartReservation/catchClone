@@ -1,7 +1,6 @@
-package com.example.catchclone.reservation.repository;
+package com.example.catchclone.reservation.dao;
 
 import com.example.catchclone.reservation.entity.Reservation;
-import com.example.catchclone.user.entity.User;
 import java.util.Optional;
 import org.springframework.data.repository.Repository;
 

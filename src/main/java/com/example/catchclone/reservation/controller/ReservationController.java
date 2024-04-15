@@ -68,11 +68,19 @@ public class ReservationController {
   }
 
   //예약 취소하기
-  @PutMapping("/{reservationId}")
+  @PutMapping("/cancel/{reservationId}")
   public ResponseEntity<StatusResponseDto> cancelReservation(@PathVariable Long reservationId,@AuthenticationPrincipal UserDetailsImpl userDetails){
 
 
     return ResponseEntity.ok().body(reservationService.cancelReservation(reservationId,userDetails.getUser()));
+  }
+
+  //예약 방문처리 하기(상태 값 방문으로 바꾸기, 예약상태: Y , 취소 : N , 방문완료 : V)
+  @PutMapping("/complete/{reservationId}")
+  public ResponseEntity<StatusResponseDto> visitComplete(@PathVariable Long reservationId,@AuthenticationPrincipal UserDetailsImpl userDetails){
+
+
+    return ResponseEntity.ok().body(reservationService.visitComplete(reservationId,userDetails.getUser()));
   }
 
 }

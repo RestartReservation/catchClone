@@ -1,4 +1,4 @@
-package com.example.catchclone.reservation.repository.day;
+package com.example.catchclone.reservation.dao.day;
 
 import com.example.catchclone.reservation.entity.ReservationDayInfo;
 import java.util.Optional;

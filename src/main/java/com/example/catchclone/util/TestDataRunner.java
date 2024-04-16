@@ -43,7 +43,50 @@ public class TestDataRunner implements ApplicationRunner {
         .storeHomepage("No")
         .build();
 
-    storeRepository.saveAndFlush(store);
+    Store store1 = Store.builder()
+        .storeName("TestStore2")
+        .storeLocation("Undefined")
+        .starRate(5F)
+        .timeDetail("09:00 ~ 21:00")
+        .storePhoneNumber("999-999-9999")
+        .aboutStore("Test용입니다")
+        .storeNotification("No")
+        .reservationTypeFlag("No")
+        .regularHoliday("No")
+        .storeHomepage("No")
+        .build();
+
+
+    Store store2 = Store.builder()
+        .storeName("TestStore3")
+        .storeLocation("Undefined")
+        .starRate(5F)
+        .timeDetail("09:00 ~ 21:00")
+        .storePhoneNumber("999-999-9999")
+        .aboutStore("Test용입니다")
+        .storeNotification("No")
+        .reservationTypeFlag("No")
+        .regularHoliday("No")
+        .storeHomepage("No")
+        .build();
+
+    Store store3 = Store.builder()
+        .storeName("TestStore4")
+        .storeLocation("Undefined")
+        .starRate(5F)
+        .timeDetail("09:00 ~ 21:00")
+        .storePhoneNumber("999-999-9999")
+        .aboutStore("Test용입니다")
+        .storeNotification("No")
+        .reservationTypeFlag("No")
+        .regularHoliday("No")
+        .storeHomepage("No")
+        .build();
+
+    storeRepository.save(store);
+    storeRepository.save(store2);
+    storeRepository.save(store3);
+    storeRepository.save(store1);
 
 
   }

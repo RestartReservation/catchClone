@@ -9,13 +9,14 @@ import com.example.catchclone.reservation.entity.ReservationDayInfo;
 import com.example.catchclone.reservation.entity.ReservationMonthInfo;
 import com.example.catchclone.reservation.dto.ReservationDayRequestDto;
 import com.example.catchclone.reservation.dto.ReservationMonthRequestDto;
-import com.example.catchclone.reservation.repository.ReservationRepository;
-import com.example.catchclone.reservation.repository.day.ReservationDayInfoRepository;
-import com.example.catchclone.reservation.repository.month.ReservationMonthInfoRepository;
+import com.example.catchclone.reservation.dao.ReservationRepository;
+import com.example.catchclone.reservation.dao.day.ReservationDayInfoRepository;
+import com.example.catchclone.reservation.dao.month.ReservationMonthInfoRepository;
 import com.example.catchclone.store.entity.Store;
 import com.example.catchclone.store.dao.StoreRepository;
 import com.example.catchclone.user.entity.User;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,27 @@ public class ReservationServiceImpl implements ReservationService{
   private final ReservationRepository reservationRepository;
   private final ReservationMonthInfoRepository reservationMonthInfoRepository;
   private final ReservationDayInfoRepository reservationDayInfoRepository;
+
+  @Override
+  @Transactional
+  public StatusResponseDto visitComplete(Long reservationId, User user) {
+
+    Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(
+        () -> new IllegalArgumentException("해당 예약 정보가 없습니다!")
+    );
+
+    if(Objects.equals(reservation.getReservationStatus(), "N")) {
+      throw new IllegalArgumentException("취소한 예약은 완료처리할 수 없습니다!");
+    }
+
+    if(!Objects.equals(reservation.getStore().getUser().getId(), user.getId())){
+     throw new IllegalArgumentException("해당 가맹 점주가 아닙니다!");
+    }
+
+
+    reservationRepository.updateReservationFlagVisitComplete(reservationId);
+    return new StatusResponseDto(201,"해당 가맹점의 예약이 방문완료 처리 되었습니다!");
+  }
 
   @Override
   @Transactional
@@ -85,6 +107,10 @@ public class ReservationServiceImpl implements ReservationService{
         .orElseThrow( () -> new IllegalArgumentException("해당 예약 정보가 없습니다!"));
 
     if(reservation.getUser().getId()!=user.getId()) throw new IllegalArgumentException("예약자만 해당 예약을 췩소할 수 있습니다!");
+
+    if(Objects.equals(reservation.getReservationStatus(), "V")) {
+      throw new IllegalArgumentException("방문 완료한 예약은 완료처리할 수 없습니다!");
+    }
 
     Long reservationDayInfoId = reservation.getReservationDayInfoId();
 

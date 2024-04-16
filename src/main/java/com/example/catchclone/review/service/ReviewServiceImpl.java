@@ -1,6 +1,8 @@
 package com.example.catchclone.review.service;
 
 import com.example.catchclone.common.dto.StatusResponseDto;
+import com.example.catchclone.reservation.dao.ReservationRepository;
+import com.example.catchclone.reservation.entity.Reservation;
 import com.example.catchclone.review.dao.ReviewRepository;
 import com.example.catchclone.review.dto.ReviewRequestDto;
 import com.example.catchclone.review.dto.ReviewResponseDto;
@@ -18,15 +20,29 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewServiceImpl implements ReviewService {
   private final ReviewRepository reviewRepository;
   private final UserService userService;
+
+  private final ReservationRepository reservationRepository;
   @Override
   @Transactional
   public StatusResponseDto addReview(User user, ReviewRequestDto reviewRequestDto,Long storeId) {
-    Review review = Review.builder()
-        .build();
 
-    reviewRepository.save(review);
+    Reservation reservation = reservationRepository.findByUserIdAndStoreId(user.getId(),storeId);
 
-    return new StatusResponseDto(201,"Created");
+    //Review review
+
+    if(reservation!=null){
+      Review review = Review.builder()
+          .userId(user.getId())
+          .storeId(storeId)
+          .reservationId(reservation.getId())
+          .reviewRequestDto(reviewRequestDto)
+          .build();
+      reviewRepository.save(review);
+      return new StatusResponseDto(201,"Created");
+    }else{
+      throw new IllegalArgumentException("해당 가맹점의 예약 현황이 없거나, 완료상태가 아닙니다!");
+    }
+
   }
 
   @Override

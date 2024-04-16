@@ -1,4 +1,4 @@
-package com.example.catchclone.reservation.repository.month;
+package com.example.catchclone.reservation.dao.month;
 
 import com.example.catchclone.reservation.dto.ReservationMonthInfoResponseDto;
 import java.util.List;

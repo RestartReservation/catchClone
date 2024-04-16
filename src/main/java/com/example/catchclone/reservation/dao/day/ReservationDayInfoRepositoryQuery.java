@@ -1,7 +1,6 @@
-package com.example.catchclone.reservation.repository.day;
+package com.example.catchclone.reservation.dao.day;
 
 import com.example.catchclone.reservation.dto.ReservationDayInfoResponseDto;
-import com.example.catchclone.reservation.dto.ReservationMonthInfoResponseDto;
 import java.util.List;
 
 public interface ReservationDayInfoRepositoryQuery {

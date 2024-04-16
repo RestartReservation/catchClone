@@ -23,4 +23,6 @@ public interface ReservationService {
   void addReservation(Long storeId,Long dayId,ReservationRequestDto reservationRequestDto,User user);
 
   StatusResponseDto cancelReservation(Long reservationId,User user);
+
+  StatusResponseDto visitComplete(Long reservationId,User user);
 }

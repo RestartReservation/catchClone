@@ -5,15 +5,13 @@ import com.example.catchclone.reservation.dto.ReservationDayInfoResponseDto;
 import com.example.catchclone.reservation.dto.ReservationDayRequestDto;
 import com.example.catchclone.reservation.dto.ReservationMonthInfoResponseDto;
 import com.example.catchclone.reservation.dto.ReservationMonthRequestDto;
-import com.example.catchclone.reservation.dto.ReservationRequestDto;
-import com.example.catchclone.reservation.service.ReservationService;
+import com.example.catchclone.reservation.service.interfaces.ReservationService;
 import com.example.catchclone.security.UserDetailsImpl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -59,21 +57,7 @@ public class ReservationController {
     return reservationService.showReservationDayInfo(monthId,userDetails.getUser());
   }
 
-  //예약하기
-  @PostMapping("/{storeId}/{dayId}")
-  public void addReservation(@PathVariable Long storeId,@PathVariable Long dayId,@RequestBody
-      ReservationRequestDto reservationRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-    reservationService.addReservation(storeId,dayId,reservationRequestDto,userDetails.getUser());
-  }
-
-  //예약 취소하기
-  @PutMapping("/cancel/{reservationId}")
-  public ResponseEntity<StatusResponseDto> cancelReservation(@PathVariable Long reservationId,@AuthenticationPrincipal UserDetailsImpl userDetails){
-
-
-    return ResponseEntity.ok().body(reservationService.cancelReservation(reservationId,userDetails.getUser()));
-  }
 
   //예약 방문처리 하기(상태 값 방문으로 바꾸기, 예약상태: Y , 취소 : N , 방문완료 : V)
   @PutMapping("/complete/{reservationId}")

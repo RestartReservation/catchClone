@@ -29,7 +29,7 @@ public class ReservationDayInfo {
   private ReservationMonthInfo reservationMonthInfo;
 
   @Column
-  private String dayInfo;
+  private Integer dayInfo;
 
   @Column
   private String timeInfo;

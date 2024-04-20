@@ -57,7 +57,11 @@ public class ReservationController {
     return reservationService.showReservationDayInfo(monthId,userDetails.getUser());
   }
 
+  @GetMapping("{year}/{month}/{day}/{storeId}")
+  public ReservationDayInfoResponseDto showReservation(@PathVariable Long storeId,@PathVariable Integer year,@PathVariable Integer month,@PathVariable Integer day){
 
+    return reservationService.showReservation(storeId,year,month,day);
+  }
 
   //예약 방문처리 하기(상태 값 방문으로 바꾸기, 예약상태: Y , 취소 : N , 방문완료 : V)
   @PutMapping("/complete/{reservationId}")

@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class ReservationDayRequestDto {
 
-  private String dayInfo;
+  private Integer dayInfo;
   private String timeInfo;
   private Integer capacity;
 

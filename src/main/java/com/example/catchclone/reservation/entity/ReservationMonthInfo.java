@@ -34,10 +34,10 @@ public class ReservationMonthInfo {
   List<ReservationDayInfo> reservationDayInfo;
 
   @Column
-  private String yearInfo;
+  private Integer yearInfo;
 
   @Column
-  private String monthInfo;
+  private Integer monthInfo;
 
   @Builder
   public ReservationMonthInfo(Store store, ReservationMonthRequestDto reservationMonthRequestDto){

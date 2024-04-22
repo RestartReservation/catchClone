@@ -24,14 +24,15 @@ public interface ReservationService {
 
   List<ReservationDayInfoResponseDto> showReservationDayInfo(Long monthId,User user);
 
- ReservationDayInfoResponseDto showReservation(Long storeId,Integer year,Integer month,Integer day);
+ List<ReservationDayInfoResponseDto> showReservations(Long storeId,Integer year,Integer month,Integer day);
   StatusResponseDto visitComplete(Long reservationId,User user);
 
 
 
   ReservationMonthInfo findReservationMonthInfoByYearInfoAndMonthInfoAndStoreId(Integer yearInfo, Integer monthInfo,
       Store store);
-
+  List<ReservationDayInfo> findAllByReservationMonthInfoAndDayInfo(
+      ReservationMonthInfo reservationMonthInfo, Integer dayInfo);
   ReservationDayInfo findReservationDayInfoByReservationMonthInfoAndDayInfo(
       ReservationMonthInfo reservationMonthInfo, Integer dayInfo);
 }

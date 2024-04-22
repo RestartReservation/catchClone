@@ -40,7 +40,7 @@ public class ReservationDayInfo {
   @Column
   private Integer capacity;
 
-  @Builder
+
   public ReservationDayInfo(ReservationMonthInfo reservationMonthInfo, ReservationDayRequestDto reservationDayRequestDto){
     this.reservationMonthInfo = reservationMonthInfo;
     this.dayInfo = reservationDayRequestDto.getDayInfo();
@@ -49,4 +49,12 @@ public class ReservationDayInfo {
     this.capacity = reservationDayRequestDto.getCapacity();
   }
 
+  @Builder
+  public ReservationDayInfo(ReservationMonthInfo reservationMonthInfo, Integer dayInfo, String timeInfo, Integer capacity){
+    this.reservationMonthInfo = reservationMonthInfo;
+    this.dayInfo = dayInfo;
+    this.timeInfo = timeInfo;
+    this.isAvailable = "Y";
+    this.capacity = capacity;
+  }
 }

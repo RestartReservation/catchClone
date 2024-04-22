@@ -17,8 +17,10 @@ import com.example.catchclone.store.entity.Store;
 import com.example.catchclone.store.dao.StoreRepository;
 import com.example.catchclone.store.service.StoreServiceImpl;
 import com.example.catchclone.user.entity.User;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import org.springframework.stereotype.Service;
@@ -74,6 +76,12 @@ public class ReservationServiceImpl implements ReservationService {
   }
 
   @Override
+  public List<ReservationDayInfo> findAllByReservationMonthInfoAndDayInfo(
+      ReservationMonthInfo reservationMonthInfo, Integer dayInfo) {
+    return reservationDayInfoRepository.findAllByReservationMonthInfoAndDayInfo(reservationMonthInfo,dayInfo);
+  }
+
+  @Override
   @Transactional
   public StatusResponseDto addDayInfo(Long mothInfoId, ReservationDayRequestDto reservationDayRequestDto,
       User user) {
@@ -86,10 +94,7 @@ public class ReservationServiceImpl implements ReservationService {
     Store store = storeRepository.findById(reservationMonthInfo.getStore().getId()).orElseThrow(
         ()->new IllegalArgumentException("해당 가맹점은 존재하지 않습니다!"));
 
-    reservationDayInfoRepository.save(ReservationDayInfo.builder()
-            .reservationMonthInfo(reservationMonthInfo)
-            .reservationDayRequestDto(reservationDayRequestDto)
-            .build());
+    reservationDayInfoRepository.save(new ReservationDayInfo(reservationMonthInfo,reservationDayRequestDto));
 
     return new StatusResponseDto(201,"가게 일 예약 정보 등록이 완료되었습니다!");
   }
@@ -121,12 +126,20 @@ public class ReservationServiceImpl implements ReservationService {
 
   @Override
   @Transactional(readOnly = true)
-  public ReservationDayInfoResponseDto showReservation(Long storeId,Integer year,Integer month,Integer day) {
+  public List<ReservationDayInfoResponseDto> showReservations(Long storeId,Integer year,Integer month,Integer day) {
     Store store = storeService.findStoreByStoreId(storeId);
     ReservationMonthInfo reservationMonthInfo = findReservationMonthInfoByYearInfoAndMonthInfoAndStoreId(year,month,store);
-    ReservationDayInfo reservationDayInfo = findReservationDayInfoByReservationMonthInfoAndDayInfo(reservationMonthInfo,day);
+    List<ReservationDayInfo> reservationDayInfoList =findAllByReservationMonthInfoAndDayInfo(reservationMonthInfo,day);
 
-   return new ReservationDayInfoResponseDto(reservationDayInfo.getDayInfo(),reservationDayInfo.getTimeInfo(),reservationDayInfo.getIsAvailable(),reservationDayInfo.getCapacity());
+   return reservationDayInfoList.stream()
+       .map(reservationDayInfo -> new ReservationDayInfoResponseDto(
+           reservationDayInfo.getId(),
+           reservationDayInfo.getDayInfo(),
+           reservationDayInfo.getTimeInfo(),
+           reservationDayInfo.getIsAvailable(),
+           reservationDayInfo.getCapacity()
+       ))
+       .collect(Collectors.toList());
   }
 
 
@@ -142,10 +155,7 @@ public class ReservationServiceImpl implements ReservationService {
       throw new IllegalArgumentException("해당 가맹 점주만 예약 정보등록이 가능합니다!");
 
 
-    reservationMonthInfoRepository.save(ReservationMonthInfo.builder()
-        .store(store)
-        .reservationMonthRequestDto(reservationMonthRequestDto)
-        .build());
+    reservationMonthInfoRepository.save(new ReservationMonthInfo(store,reservationMonthRequestDto));
 
     return new StatusResponseDto(201,"가게 월 예약 정보 등록이 완료되었습니다!");
 

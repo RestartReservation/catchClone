@@ -39,12 +39,18 @@ public class ReservationMonthInfo {
   @Column
   private Integer monthInfo;
 
-  @Builder
-  public ReservationMonthInfo(Store store, ReservationMonthRequestDto reservationMonthRequestDto){
 
+  public ReservationMonthInfo(Store store, ReservationMonthRequestDto reservationMonthRequestDto){
     this.store = store;
     this.yearInfo = reservationMonthRequestDto.getYearInfo();
     this.monthInfo = reservationMonthRequestDto.getMonthInfo();
+  }
+
+  @Builder
+  public ReservationMonthInfo(Store store, Integer yearInfo, Integer monthInfo){
+    this.store = store;
+    this.yearInfo = yearInfo;
+    this.monthInfo = monthInfo;
   }
 
 }

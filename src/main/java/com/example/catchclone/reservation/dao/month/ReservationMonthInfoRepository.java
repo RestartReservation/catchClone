@@ -9,7 +9,7 @@ import org.springframework.data.repository.Repository;
 public interface ReservationMonthInfoRepository extends Repository<ReservationMonthInfo,Long>,ReservationMonthInfoRepositoryQuery {
 
   void save(ReservationMonthInfo reservationMonthInfo);
-
+  void saveAndFlush(ReservationMonthInfo reservationMonthInfo);
   Optional<ReservationMonthInfo> findById(Long monthInfoId);
 
   Optional<ReservationMonthInfo> findByStore(Store store);

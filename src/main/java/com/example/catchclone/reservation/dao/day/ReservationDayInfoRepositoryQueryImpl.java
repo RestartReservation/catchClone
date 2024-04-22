@@ -2,6 +2,7 @@ package com.example.catchclone.reservation.dao.day;
 
 import com.example.catchclone.reservation.dto.ReservationDayInfoResponseDto;
 import static com.example.catchclone.reservation.entity.QReservationDayInfo.reservationDayInfo;
+import static com.example.catchclone.reservation.entity.QReservationMonthInfo.reservationMonthInfo;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -47,5 +48,26 @@ public class ReservationDayInfoRepositoryQueryImpl implements ReservationDayInfo
             .fetch();
 
     return result;
+  }
+
+  @Override
+  public List<ReservationDayInfoResponseDto> findReservationInfos(Long storeId, Integer year,
+      Integer month, Integer day) {
+    return jpaQueryFactory.select(
+        Projections.bean(
+            ReservationDayInfoResponseDto.class,
+            reservationDayInfo.dayInfo,
+            reservationDayInfo.timeInfo,
+            reservationDayInfo.isAvailable,
+            reservationDayInfo.capacity
+        )
+    ).from(reservationMonthInfo)
+        .leftJoin(reservationMonthInfo.reservationDayInfo, reservationDayInfo)
+        .where(reservationMonthInfo.store.id.eq(storeId)
+            .and(reservationMonthInfo.yearInfo.eq(year))
+            .and(reservationMonthInfo.monthInfo.eq(month))
+            .and(reservationDayInfo.dayInfo.eq(day)))
+        .fetch();
+
   }
 }

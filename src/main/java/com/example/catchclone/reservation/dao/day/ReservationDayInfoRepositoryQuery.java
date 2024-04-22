@@ -7,6 +7,8 @@ public interface ReservationDayInfoRepositoryQuery {
 
   List<ReservationDayInfoResponseDto> reservationDayInfoByMonthId(Long storeId);
 
+  List<ReservationDayInfoResponseDto> findReservationInfos(Long storeId,Integer year,Integer month,Integer day);
+
   void updateCapacity(Long dayId,Integer minusCount);
 
   void plusCapacity(Long reservationDayInfoId,Integer capacity);

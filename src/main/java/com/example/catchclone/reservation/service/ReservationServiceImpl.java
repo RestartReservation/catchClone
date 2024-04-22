@@ -127,19 +127,20 @@ public class ReservationServiceImpl implements ReservationService {
   @Override
   @Transactional(readOnly = true)
   public List<ReservationDayInfoResponseDto> showReservations(Long storeId,Integer year,Integer month,Integer day) {
-    Store store = storeService.findStoreByStoreId(storeId);
-    ReservationMonthInfo reservationMonthInfo = findReservationMonthInfoByYearInfoAndMonthInfoAndStoreId(year,month,store);
-    List<ReservationDayInfo> reservationDayInfoList =findAllByReservationMonthInfoAndDayInfo(reservationMonthInfo,day);
-
-   return reservationDayInfoList.stream()
-       .map(reservationDayInfo -> new ReservationDayInfoResponseDto(
-           reservationDayInfo.getId(),
-           reservationDayInfo.getDayInfo(),
-           reservationDayInfo.getTimeInfo(),
-           reservationDayInfo.getIsAvailable(),
-           reservationDayInfo.getCapacity()
-       ))
-       .collect(Collectors.toList());
+//    Store store = storeService.findStoreByStoreId(storeId);
+//    ReservationMonthInfo reservationMonthInfo = findReservationMonthInfoByYearInfoAndMonthInfoAndStoreId(year,month,store);
+//    List<ReservationDayInfo> reservationDayInfoList =findAllByReservationMonthInfoAndDayInfo(reservationMonthInfo,day);
+//
+//   return reservationDayInfoList.stream()
+//       .map(reservationDayInfo -> new ReservationDayInfoResponseDto(
+//           reservationDayInfo.getId(),
+//           reservationDayInfo.getDayInfo(),
+//           reservationDayInfo.getTimeInfo(),
+//           reservationDayInfo.getIsAvailable(),
+//           reservationDayInfo.getCapacity()
+//       ))
+//       .collect(Collectors.toList());
+    return reservationDayInfoRepository.findReservationInfos(storeId,year,month,day);
   }
 
 

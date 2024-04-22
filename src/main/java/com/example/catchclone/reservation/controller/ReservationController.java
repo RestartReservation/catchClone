@@ -7,8 +7,11 @@ import com.example.catchclone.reservation.dto.ReservationMonthInfoResponseDto;
 import com.example.catchclone.reservation.dto.ReservationMonthRequestDto;
 import com.example.catchclone.reservation.service.interfaces.ReservationService;
 import com.example.catchclone.security.UserDetailsImpl;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,9 +61,11 @@ public class ReservationController {
   }
 
   @GetMapping("{year}/{month}/{day}/{storeId}")
-  public ReservationDayInfoResponseDto showReservation(@PathVariable Long storeId,@PathVariable Integer year,@PathVariable Integer month,@PathVariable Integer day){
-
-    return reservationService.showReservation(storeId,year,month,day);
+  public ResponseEntity<List<ReservationDayInfoResponseDto>> showReservations(@PathVariable Long storeId,@PathVariable Integer year,@PathVariable Integer month,@PathVariable Integer day) {
+    List<ReservationDayInfoResponseDto> dtoList = reservationService.showReservations(storeId, year, month, day);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+    return ResponseEntity.ok().headers(headers).body(dtoList);
   }
 
   //예약 방문처리 하기(상태 값 방문으로 바꾸기, 예약상태: Y , 취소 : N , 방문완료 : V)

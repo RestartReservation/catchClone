@@ -1,6 +1,10 @@
 package com.example.catchclone.util;
 
 import com.example.catchclone.comment.dao.CommentRepository;
+import com.example.catchclone.reservation.dao.day.ReservationDayInfoRepository;
+import com.example.catchclone.reservation.dao.month.ReservationMonthInfoRepository;
+import com.example.catchclone.reservation.entity.ReservationDayInfo;
+import com.example.catchclone.reservation.entity.ReservationMonthInfo;
 import com.example.catchclone.review.dao.ReviewRepository;
 import com.example.catchclone.review.entity.Review;
 import com.example.catchclone.store.dao.StoreRepository;
@@ -24,6 +28,8 @@ public class TestDataRunner implements ApplicationRunner {
   private final UserServiceImpl userService;
   private final PasswordEncoder passwordEncoder;
   private final StoreRepository storeRepository;
+  private final ReservationMonthInfoRepository reservationMonthInfoRepository;
+  private final ReservationDayInfoRepository reservationDayInfoRepository;
   private final ReviewRepository reviewRepository;
   private final CommentRepository commentRepository;
 
@@ -83,7 +89,41 @@ public class TestDataRunner implements ApplicationRunner {
         .storeHomepage("No")
         .build();
 
-    storeRepository.save(store);
+    storeRepository.saveAndFlush(store);
+
+    ReservationMonthInfo reservationMonthInfo = ReservationMonthInfo.builder()
+        .store(store)
+        .monthInfo(4)
+        .yearInfo(2024)
+        .build();
+
+    reservationMonthInfoRepository.saveAndFlush(reservationMonthInfo);
+
+    ReservationDayInfo reservationDayInfo = ReservationDayInfo.builder()
+        .reservationMonthInfo(reservationMonthInfo)
+        .dayInfo(23)
+        .timeInfo("22:00")
+        .capacity(4)
+        .build();
+
+    ReservationDayInfo reservationDayInfo1 = ReservationDayInfo.builder()
+        .reservationMonthInfo(reservationMonthInfo)
+        .dayInfo(23)
+        .timeInfo("12:00")
+        .capacity(4)
+        .build();
+
+    ReservationDayInfo reservationDayInfo2 = ReservationDayInfo.builder()
+        .reservationMonthInfo(reservationMonthInfo)
+        .dayInfo(23)
+        .timeInfo("13:00")
+        .capacity(4)
+        .build();
+
+    reservationDayInfoRepository.save(reservationDayInfo);
+    reservationDayInfoRepository.save(reservationDayInfo1);
+    reservationDayInfoRepository.save(reservationDayInfo2);
+
     storeRepository.save(store2);
     storeRepository.save(store3);
     storeRepository.save(store1);

@@ -8,6 +8,8 @@ public interface StoreRepository extends Repository<Store,Long>,StoreRepositoryQ
 
   void save(Store store);
 
+  void saveAndFlush(Store store);
+
   Optional<Store> findByStoreName(String storeName);
 
   Optional<Store> findById(Long id);

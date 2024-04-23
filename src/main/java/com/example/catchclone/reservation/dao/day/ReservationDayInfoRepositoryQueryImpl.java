@@ -56,6 +56,7 @@ public class ReservationDayInfoRepositoryQueryImpl implements ReservationDayInfo
     return jpaQueryFactory.select(
         Projections.bean(
             ReservationDayInfoResponseDto.class,
+            reservationDayInfo.id,
             reservationDayInfo.dayInfo,
             reservationDayInfo.timeInfo,
             reservationDayInfo.isAvailable,

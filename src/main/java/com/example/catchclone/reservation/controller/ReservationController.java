@@ -60,6 +60,7 @@ public class ReservationController {
     return reservationService.showReservationDayInfo(monthId,userDetails.getUser());
   }
 
+  //가맹점 일 예약 정보 조회(년/월/일 && storeId 한번에 받아서 조회)
   @GetMapping("{year}/{month}/{day}/{storeId}")
   public ResponseEntity<List<ReservationDayInfoResponseDto>> showReservations(@PathVariable Long storeId,@PathVariable Integer year,@PathVariable Integer month,@PathVariable Integer day) {
     List<ReservationDayInfoResponseDto> dtoList = reservationService.showReservations(storeId, year, month, day);

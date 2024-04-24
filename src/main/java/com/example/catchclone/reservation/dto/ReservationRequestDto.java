@@ -1,5 +1,6 @@
 package com.example.catchclone.reservation.dto;
 
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,10 +8,14 @@ import lombok.Setter;
 @Setter
 public class ReservationRequestDto {
 
-  private Integer reservationCount;
+  private Integer numberOfPeople;
 
-  private String reservationDate;
+  private Integer yearInfo;
 
-  private String reservationTime;
+  private Integer monthInfo;
+
+  private Integer dayInfo;
+
+  private String timeInfo;
 
 }

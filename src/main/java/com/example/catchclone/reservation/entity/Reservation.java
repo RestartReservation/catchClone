@@ -41,25 +41,32 @@ public class Reservation extends TimeStamped {
   private String reservationStatus;  //예약상태
 
   @Column
-  private Integer reservationCount;  //예약 인원
+  private Integer numberOfPeople;  //예약 인원
 
   @Column
-  private String reservationDate; //예약 일자
+  private Integer yearInfo;
 
   @Column
-  private String reservationTime; //예약 시간
+  private Integer monthInfo;
+
+  @Column
+  private Integer dayInfo;
+
+  @Column
+  private String timeInfo; //예약 시간
 
 
   @Builder
-  public Reservation(User user,Store store,Long reservationDayInfoId, ReservationRequestDto reservationRequestDto){
-
+  public Reservation(User user,Store store,Long reservationDayInfoId, Integer numberOfPeople, Integer yearInfo, Integer monthInfo, Integer dayInfo, String timeInfo){
     this.user = user;
     this.store = store;
     this.reservationDayInfoId = reservationDayInfoId;
     this.reservationStatus = "Y";
-    this.reservationCount = reservationRequestDto.getReservationCount();
-    this.reservationDate = reservationRequestDto.getReservationDate();
-    this.reservationTime = reservationRequestDto.getReservationTime();
+    this.numberOfPeople= numberOfPeople;
+    this.yearInfo = yearInfo;
+    this.monthInfo = monthInfo;
+    this.dayInfo = dayInfo;
+    this.timeInfo = timeInfo;
   }
 
 }

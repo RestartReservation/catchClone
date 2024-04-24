@@ -4,15 +4,20 @@ import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.reservation.dao.ReservationRepository;
 import com.example.catchclone.reservation.dao.day.ReservationDayInfoRepository;
 import com.example.catchclone.reservation.dao.month.ReservationMonthInfoRepository;
+import com.example.catchclone.reservation.dto.ReservationDayInfoResponseDto;
 import com.example.catchclone.reservation.dto.ReservationRequestDto;
+import com.example.catchclone.reservation.dto.UserReservationResponseDto;
 import com.example.catchclone.reservation.entity.Reservation;
 import com.example.catchclone.reservation.entity.ReservationDayInfo;
 import com.example.catchclone.reservation.service.interfaces.UserReservationService;
 import com.example.catchclone.store.dao.StoreRepository;
 import com.example.catchclone.store.entity.Store;
 import com.example.catchclone.user.entity.User;
+import com.example.catchclone.user.repository.UserRepository;
+import com.example.catchclone.user.service.UserService;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import org.springframework.stereotype.Service;
@@ -23,6 +28,7 @@ public class UserReservationServiceImpl implements UserReservationService {
   private final StoreRepository storeRepository;
   private final ReservationRepository reservationRepository;
   private final ReservationDayInfoRepository reservationDayInfoRepository;
+  private final UserService userService;
   @Override
   @Transactional
   public StatusResponseDto cancelReservation(Long reservationId, User user) {
@@ -30,7 +36,7 @@ public class UserReservationServiceImpl implements UserReservationService {
     Reservation reservation = reservationRepository.findById(reservationId)
         .orElseThrow( () -> new IllegalArgumentException("해당 예약 정보가 없습니다!"));
 
-    if(reservation.getUser().getId()!=user.getId()) throw new IllegalArgumentException("예약자만 해당 예약을 췩소할 수 있습니다!");
+    if(reservation.getUser().getId()!=user.getId()) throw new IllegalArgumentException("예약자만 해당 예약을 취소할 수 있습니다!");
 
     if(Objects.equals(reservation.getReservationStatus(), "V")) {
       throw new IllegalArgumentException("방문 완료한 예약은 완료처리할 수 없습니다!");
@@ -42,10 +48,16 @@ public class UserReservationServiceImpl implements UserReservationService {
         () -> new IllegalArgumentException("일 예약 정보를 찾을 수 없습니다!")
     );
     reservationRepository.updateReservationFlag(reservationId);
-    reservationDayInfoRepository.updateCapacity(reservation.getReservationDayInfoId(),reservation.getReservationCount() + reservationDayInfo.getCapacity());
+    reservationDayInfoRepository.updateCapacity(reservation.getReservationDayInfoId(),reservation.getNumberOfPeople() + reservationDayInfo.getCapacity());
 
     return new StatusResponseDto(201,"해당 가맹점의 예약이 취소되었습니다!");
 
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<UserReservationResponseDto> getUserReservations(Long userId) {
+    return reservationRepository.findUserReservationsByUserId(userId);
   }
 
   @Override
@@ -77,17 +89,21 @@ public class UserReservationServiceImpl implements UserReservationService {
 
     }
 
-    if(reservationDayInfo.getCapacity() < reservationRequestDto.getReservationCount()) throw new IllegalArgumentException("예약가능 인원보다 예약요청 인원이 더 많습니다!!");
+    if(reservationDayInfo.getCapacity() < reservationRequestDto.getNumberOfPeople()) throw new IllegalArgumentException("예약가능 인원보다 예약요청 인원이 더 많습니다!!");
 
     Reservation forAddreservation = Reservation.builder()
         .user(user)
         .store(store)
         .reservationDayInfoId(dayId)
-        .reservationRequestDto(reservationRequestDto)
+        .numberOfPeople(reservationRequestDto.getNumberOfPeople())
+        .yearInfo(reservationRequestDto.getYearInfo())
+        .dayInfo(reservationRequestDto.getDayInfo())
+        .monthInfo(reservationRequestDto.getMonthInfo())
+        .timeInfo(reservationRequestDto.getTimeInfo())
         .build();
 
     reservationRepository.save(forAddreservation);
-    reservationDayInfoRepository.updateCapacity(dayId,reservationDayInfo.getCapacity()-forAddreservation.getReservationCount());
+    reservationDayInfoRepository.updateCapacity(dayId,reservationDayInfo.getCapacity()-forAddreservation.getNumberOfPeople());
 
 
   }

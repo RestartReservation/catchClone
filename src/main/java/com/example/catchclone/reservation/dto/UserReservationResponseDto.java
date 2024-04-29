@@ -1,20 +1,19 @@
 package com.example.catchclone.reservation.dto;
 
-import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@NoArgsConstructor
 public class UserReservationResponseDto {
-  private final Long reservationId;
-  private final String storeName;
-  private final Integer yearInfo;
-  private final Integer monthInfo;
-  private final Integer dayInfo;
-  private final String timeInfo;
-  private final String reservationStatus;
+  private Long reservationId;
+  private String storeName;
+  private Integer yearInfo;
+  private Integer monthInfo;
+  private Integer dayInfo;
+  private String timeInfo;
+  private String reservationStatus;
 }

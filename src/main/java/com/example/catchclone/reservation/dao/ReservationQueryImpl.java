@@ -7,7 +7,9 @@ import static com.example.catchclone.store.entity.QStore.store;
 
 import com.example.catchclone.reservation.dto.ReservationDayInfoResponseDto;
 import com.example.catchclone.reservation.dto.UserReservationResponseDto;
+import com.example.catchclone.reservation.entity.QReservation;
 import com.example.catchclone.reservation.entity.Reservation;
+import com.example.catchclone.store.entity.QStore;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -39,20 +41,23 @@ public class ReservationQueryImpl implements ReservationQuery{
 
   @Override
   public List<UserReservationResponseDto> findUserReservationsByUserId(Long userId) {
-    return jpaQueryFactory.select(
-            Projections.bean(
-                UserReservationResponseDto.class,
-                reservation.id,
-                store.storeName,
-                reservation.yearInfo,
-                reservation.monthInfo,
-                reservation.dayInfo,
-                reservation.timeInfo,
-                reservation.reservationStatus
-            )
-        ).from(reservation)
-        .leftJoin(reservation.store, store)
-        .where(reservation.user.id.eq(userId))
+    QReservation qReservation = QReservation.reservation;
+    QStore qStore = QStore.store;
+
+    return jpaQueryFactory
+        .select(Projections.bean(
+            UserReservationResponseDto.class,
+            qReservation.id.as("reservationId"),
+            qStore.storeName,
+            qReservation.yearInfo,
+            qReservation.monthInfo,
+            qReservation.dayInfo,
+            qReservation.timeInfo,
+            qReservation.reservationStatus
+        ))
+        .from(qReservation)
+        .leftJoin(qReservation.store, qStore)
+        .where(qReservation.user.id.eq(userId))
         .fetch();
   }
 

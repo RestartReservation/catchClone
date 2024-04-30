@@ -48,6 +48,7 @@ public class ReservationQueryImpl implements ReservationQuery{
         .select(Projections.bean(
             UserReservationResponseDto.class,
             qReservation.id.as("reservationId"),
+            qStore.id.as("storeId"),
             qStore.storeName,
             qReservation.yearInfo,
             qReservation.monthInfo,

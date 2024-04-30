@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserReservationResponseDto {
   private Long reservationId;
+  private Long storeId;
   private String storeName;
   private Integer yearInfo;
   private Integer monthInfo;

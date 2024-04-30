@@ -31,12 +31,7 @@ public class ReviewServiceImpl implements ReviewService {
     //Review review
 
     if(reservation!=null){
-      Review review = Review.builder()
-          .userId(user.getId())
-          .storeId(storeId)
-          .reservationId(reservation.getId())
-          .reviewRequestDto(reviewRequestDto)
-          .build();
+      Review review = new Review(user.getId(),storeId,reviewRequestDto);
       reviewRepository.save(review);
       return new StatusResponseDto(201,"Created");
     }else{

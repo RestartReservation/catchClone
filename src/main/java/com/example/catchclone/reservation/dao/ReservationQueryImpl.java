@@ -14,11 +14,18 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class ReservationQueryImpl implements ReservationQuery{
 
   private final JPAQueryFactory jpaQueryFactory;
+  @Override
+  @Transactional(readOnly = true)
+  public boolean existsReservationById(Long reservationId) {
+    return jpaQueryFactory.from(reservation).where(reservation.id.eq(reservationId)).select(reservation.id)
+        .setHint("org.hibernate.readOnly", true).fetchFirst() != null;
+  }
 
   @Override
   public void updateReservationFlagVisitComplete(Long reservationId) {

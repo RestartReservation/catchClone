@@ -7,6 +7,7 @@ import com.example.catchclone.review.dto.UpdateReviewRequestDto;
 import com.example.catchclone.review.entity.Review;
 import com.example.catchclone.security.UserDetailsImpl;
 import com.example.catchclone.user.entity.User;
+import java.util.List;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -18,4 +19,6 @@ public interface ReviewService {
   StatusResponseDto updateReview( Long reviewId,Long userId,UpdateReviewRequestDto updateReviewRequestDto);
   StatusResponseDto deleteReview(User user, Long reviewId);
   Review findReviewByReviewId(Long reviewId);
+
+  List<ReviewResponseDto> getStoreReviewsByStoreId(Long storeId);
 }

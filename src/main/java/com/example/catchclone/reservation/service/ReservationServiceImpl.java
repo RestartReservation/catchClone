@@ -68,6 +68,18 @@ public class ReservationServiceImpl implements ReservationService {
   }
 
   @Override
+  public Reservation findReservationById(Long reservationId) {
+    return reservationRepository.findById(reservationId).orElseThrow(
+        () -> new IllegalArgumentException("예약정보가 존재하지 않습니다.")
+    );
+  }
+
+  @Override
+  public boolean existsReservationByReservationId(Long reservationId) {
+    return reservationRepository.existsReservationById(reservationId);
+  }
+
+  @Override
   public ReservationMonthInfo findReservationMonthInfoByYearInfoAndMonthInfoAndStoreId(Integer yearInfo, Integer monthInfo,
       Store store) {
     return reservationMonthInfoRepository.findByYearInfoAndMonthInfoAndStore(yearInfo,monthInfo,store).orElseThrow(

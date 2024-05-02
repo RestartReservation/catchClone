@@ -22,9 +22,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
-  private CommentRepository commentRepository;
-  private UserRepository userRepository;
-  private ReviewService reviewService;
+  private final CommentRepository commentRepository;
+  private final UserRepository userRepository;
+  private final ReviewService reviewService;
   @Override
   @Transactional
   public StatusResponseDto addComment(User user, CommentRequestDto commentRequestDto,Long reviewId) {

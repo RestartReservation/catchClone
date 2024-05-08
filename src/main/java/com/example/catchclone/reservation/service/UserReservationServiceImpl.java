@@ -9,15 +9,22 @@ import com.example.catchclone.reservation.dto.ReservationRequestDto;
 import com.example.catchclone.reservation.dto.UserReservationResponseDto;
 import com.example.catchclone.reservation.entity.Reservation;
 import com.example.catchclone.reservation.entity.ReservationDayInfo;
+import com.example.catchclone.reservation.entity.ReservationMonthInfo;
 import com.example.catchclone.reservation.service.interfaces.UserReservationService;
 import com.example.catchclone.store.dao.StoreRepository;
 import com.example.catchclone.store.entity.Store;
 import com.example.catchclone.user.entity.User;
 import com.example.catchclone.user.repository.UserRepository;
 import com.example.catchclone.user.service.UserService;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.swing.text.html.Option;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import org.springframework.stereotype.Service;
@@ -28,7 +35,15 @@ public class UserReservationServiceImpl implements UserReservationService {
   private final StoreRepository storeRepository;
   private final ReservationRepository reservationRepository;
   private final ReservationDayInfoRepository reservationDayInfoRepository;
+
+  private final ReservationMonthInfoRepository reservationMonthInfoRepository;
   private final UserService userService;
+
+  @Override
+  public Optional<Reservation> findReservationStatusVById(Long reservationId) {
+    return reservationRepository.findReservationStatusVById(reservationId);
+  }
+
   @Override
   @Transactional
   public StatusResponseDto cancelReservation(Long reservationId, User user) {
@@ -78,6 +93,17 @@ public class UserReservationServiceImpl implements UserReservationService {
         ()-> new IllegalArgumentException("가게의 일 예약정보가 존재하지 않습니다!")
     );
 
+    ReservationMonthInfo reservationMonthInfo = reservationMonthInfoRepository.findById(reservationDayInfo.getReservationMonthInfo().getId()).orElseThrow(
+        () -> new IllegalArgumentException("해당 월 예약 정보가 없습니다!")
+    );
+
+    //현재 시간과 예약 정보의 시간을 비교하여, 현재 시간 기준 이전 예약은 할 수 없도록 막는 부분입니다.
+    int timeInfo = Integer.parseInt(reservationDayInfo.getTimeInfo().split(":")[0]);
+    int minuteInfo = Integer.parseInt(reservationDayInfo.getTimeInfo().split(":")[1]);
+
+    LocalDateTime reservationTime = LocalDateTime.of(reservationMonthInfo.getYearInfo(),reservationMonthInfo.getMonthInfo(),reservationDayInfo.getDayInfo(),timeInfo,minuteInfo);
+
+    if(!reservationTime.isAfter(LocalDateTime.now())) throw new IllegalArgumentException("현재 시간보다 이전의 예약은 진행할 수 없습니다!");
     List<Reservation> reservation = reservationRepository.findByUserIdAndDayId(user.getId(), dayId);
 
 

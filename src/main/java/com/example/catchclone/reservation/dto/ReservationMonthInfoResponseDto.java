@@ -9,11 +9,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ReservationMonthInfoResponseDto {
 
-  private String yearInfo;
-  private String monthInfo;
+  private Integer yearInfo;
+  private Integer monthInfo;
 
 
-  public ReservationMonthInfoResponseDto(String yearInfo,String monthInfo){
+  public ReservationMonthInfoResponseDto(Integer yearInfo,Integer monthInfo){
     this.yearInfo = yearInfo;
     this.monthInfo = monthInfo;
   }

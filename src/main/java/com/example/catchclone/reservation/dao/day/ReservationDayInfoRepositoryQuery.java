@@ -12,4 +12,6 @@ public interface ReservationDayInfoRepositoryQuery {
   void updateCapacity(Long dayId,Integer minusCount);
 
   void plusCapacity(Long reservationDayInfoId,Integer capacity);
+
+  boolean findDayInfoByMonthIdAndDayAndTime(Long monthInfoId,Integer dayInfo,String timeInfo);
 }

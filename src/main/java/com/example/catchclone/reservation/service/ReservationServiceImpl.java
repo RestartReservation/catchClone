@@ -106,6 +106,9 @@ public class ReservationServiceImpl implements ReservationService {
     Store store = storeRepository.findById(reservationMonthInfo.getStore().getId()).orElseThrow(
         ()->new IllegalArgumentException("해당 가맹점은 존재하지 않습니다!"));
 
+    if(reservationDayInfoRepository.findDayInfoByMonthIdAndDayAndTime(mothInfoId,reservationDayRequestDto.getDayInfo(),reservationDayRequestDto.getTimeInfo()))
+      throw new IllegalArgumentException("해당 시간에 예약 정보가 이미 존재합니다!");
+
     reservationDayInfoRepository.save(new ReservationDayInfo(reservationMonthInfo,reservationDayRequestDto));
 
     return new StatusResponseDto(201,"가게 일 예약 정보 등록이 완료되었습니다!");
@@ -167,6 +170,9 @@ public class ReservationServiceImpl implements ReservationService {
     if(!store.getUser().getId().equals(user.getId()))
       throw new IllegalArgumentException("해당 가맹 점주만 예약 정보등록이 가능합니다!");
 
+    //같은 년도, 월을 가진 예약정보를 중복으로 받지 않기 위한 조치
+    if(reservationRepository.findMontInfoByYearAndMonth(reservationMonthRequestDto.getYearInfo(),
+        reservationMonthRequestDto.getMonthInfo())) throw new IllegalArgumentException("이미 해당 달 예약 정보가 존재합니다!");
 
     reservationMonthInfoRepository.save(new ReservationMonthInfo(store,reservationMonthRequestDto));
 

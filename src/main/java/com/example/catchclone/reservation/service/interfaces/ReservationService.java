@@ -35,4 +35,8 @@ public interface ReservationService {
       ReservationMonthInfo reservationMonthInfo, Integer dayInfo);
   ReservationDayInfo findReservationDayInfoByReservationMonthInfoAndDayInfo(
       ReservationMonthInfo reservationMonthInfo, Integer dayInfo);
+
+  Reservation findReservationById(Long reservationId);
+
+  boolean existsReservationByReservationId(Long reservationId);
 }

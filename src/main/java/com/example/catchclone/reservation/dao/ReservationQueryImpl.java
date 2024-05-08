@@ -7,17 +7,26 @@ import static com.example.catchclone.store.entity.QStore.store;
 
 import com.example.catchclone.reservation.dto.ReservationDayInfoResponseDto;
 import com.example.catchclone.reservation.dto.UserReservationResponseDto;
+import com.example.catchclone.reservation.entity.QReservation;
 import com.example.catchclone.reservation.entity.Reservation;
+import com.example.catchclone.store.entity.QStore;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class ReservationQueryImpl implements ReservationQuery{
 
   private final JPAQueryFactory jpaQueryFactory;
+  @Override
+  @Transactional(readOnly = true)
+  public boolean existsReservationById(Long reservationId) {
+    return jpaQueryFactory.from(reservation).where(reservation.id.eq(reservationId)).select(reservation.id)
+        .setHint("org.hibernate.readOnly", true).fetchFirst() != null;
+  }
 
   @Override
   public void updateReservationFlagVisitComplete(Long reservationId) {
@@ -40,20 +49,24 @@ public class ReservationQueryImpl implements ReservationQuery{
 
   @Override
   public List<UserReservationResponseDto> findUserReservationsByUserId(Long userId) {
-    return jpaQueryFactory.select(
-            Projections.bean(
-                UserReservationResponseDto.class,
-                reservation.id,
-                store.storeName,
-                reservation.yearInfo,
-                reservation.monthInfo,
-                reservation.dayInfo,
-                reservation.timeInfo,
-                reservation.reservationStatus
-            )
-        ).from(reservation)
-        .leftJoin(reservation.store, store)
-        .where(reservation.user.id.eq(userId))
+    QReservation qReservation = QReservation.reservation;
+    QStore qStore = QStore.store;
+
+    return jpaQueryFactory
+        .select(Projections.bean(
+            UserReservationResponseDto.class,
+            qReservation.id.as("reservationId"),
+            qStore.id.as("storeId"),
+            qStore.storeName,
+            qReservation.yearInfo,
+            qReservation.monthInfo,
+            qReservation.dayInfo,
+            qReservation.timeInfo,
+            qReservation.reservationStatus
+        ))
+        .from(qReservation)
+        .leftJoin(qReservation.store, qStore)
+        .where(qReservation.user.id.eq(userId))
         .fetch();
   }
 

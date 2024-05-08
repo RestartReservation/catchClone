@@ -9,6 +9,7 @@ import com.example.catchclone.review.dto.UpdateReviewRequestDto;
 import com.example.catchclone.review.service.ReviewServiceImpl;
 import com.example.catchclone.security.UserDetailsImpl;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -47,6 +48,15 @@ public class ReviewController {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return ResponseEntity.ok().headers(headers).body(reviewResponseDto);
+  }
+
+  //store 리뷰 모두 조회(페이징 필요)
+  @GetMapping("/stores/{storeId}")
+  public ResponseEntity<List<ReviewResponseDto>> getStoreReviews(@PathVariable Long storeId) {
+    List<ReviewResponseDto> dtoList = reviewService.getStoreReviewsByStoreId(storeId);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+    return ResponseEntity.ok().headers(headers).body(dtoList);
   }
 
   @PatchMapping("/{reviewId}")

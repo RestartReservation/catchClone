@@ -12,6 +12,7 @@ public interface ReservationQuery {
   void updateReservationFlag(Long reservationId);
 
   void updateReservationFlagVisitComplete(Long reservationId);
+  boolean existsReservationById(Long reservationId);
 
   Reservation findByUserIdAndStoreId(Long userId,Long storeId);
 

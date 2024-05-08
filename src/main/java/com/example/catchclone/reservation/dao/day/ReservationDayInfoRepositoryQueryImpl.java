@@ -51,6 +51,15 @@ public class ReservationDayInfoRepositoryQueryImpl implements ReservationDayInfo
   }
 
   @Override
+  public boolean findDayInfoByMonthIdAndDayAndTime(Long monthInfoId, Integer dayInfo,
+      String timeInfo) {
+    return jpaQueryFactory.select(reservationDayInfo)
+        .from(reservationDayInfo)
+        .where(reservationDayInfo.reservationMonthInfo.id.eq(monthInfoId),reservationDayInfo.dayInfo.eq(dayInfo),reservationDayInfo.timeInfo.eq(timeInfo))
+        .fetchOne()!=null;
+  }
+
+  @Override
   public List<ReservationDayInfoResponseDto> findReservationInfos(Long storeId, Integer year,
       Integer month, Integer day) {
     return jpaQueryFactory.select(

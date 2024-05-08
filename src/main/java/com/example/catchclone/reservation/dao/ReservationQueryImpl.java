@@ -11,6 +11,7 @@ import com.example.catchclone.reservation.entity.Reservation;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -54,6 +55,28 @@ public class ReservationQueryImpl implements ReservationQuery{
         .leftJoin(reservation.store, store)
         .where(reservation.user.id.eq(userId))
         .fetch();
+  }
+
+  @Override
+  public boolean findMontInfoByYearAndMonth(Integer yearInfo, Integer monthInfo) {
+    return jpaQueryFactory.select(reservationMonthInfo)
+        .from(reservationMonthInfo)
+        .where(reservationMonthInfo.yearInfo.eq(yearInfo),reservationMonthInfo.monthInfo.eq(monthInfo))
+        .fetchOne()!=null;
+  }
+
+  @Override
+  public Optional<Reservation> findReservationStatusVById(Long reservationId) {
+
+    Optional<Reservation> rs = Optional.ofNullable(
+        jpaQueryFactory.select(reservation)
+            .from(reservation)
+            .where(reservation.id.eq(reservationId),reservation.reservationStatus.eq("V"))
+            .fetchOne()
+    );
+
+    if(rs.isEmpty()) throw new IllegalArgumentException("해당 예약이 없거나, 방문완료 상태가 아닙니다!");
+    return rs;
   }
 
   @Override

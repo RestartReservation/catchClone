@@ -4,6 +4,7 @@ import static com.example.catchclone.like.entity.reviewLike.QReviewLike.reviewLi
 import static com.example.catchclone.review.entity.QReview.review;
 
 import com.example.catchclone.review.dto.ReviewResponseDto;
+import com.example.catchclone.review.entity.Review;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -18,6 +19,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
   private final JPAQueryFactory jpaQueryFactory;
+
+  @Override
+  public Optional<Review> findByReviewByReservationId(Long reservationId) {
+
+    Optional<Review> rs = Optional.ofNullable( jpaQueryFactory.select(review)
+        .from(review)
+        .where(review.reservationId.eq(reservationId))
+        .fetchOne()
+);
+    if(rs.isPresent()) throw new IllegalArgumentException("이미 해당 예약에 대한 리뷰가 존재합니다!");
+    return rs;
+
+  }
+
   @Override
   @Transactional
   public Optional<ReviewResponseDto> responseReviewDtoByReviewId(Long reviewId) {

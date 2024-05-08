@@ -32,12 +32,12 @@ public class ReviewController {
   public static final String REVIEW_URI_API = "/ct/reviews";
   private final ReviewServiceImpl reviewService;
 
-  @PostMapping("/{storeId}")
+  @PostMapping("/{storeId}/{reservationId}")
   public ResponseEntity<StatusResponseDto> addReview(@RequestBody ReviewRequestDto reviewRequestDto,
-      @PathVariable Long storeId, @AuthenticationPrincipal
+      @PathVariable Long storeId,@PathVariable Long reservationId, @AuthenticationPrincipal
   UserDetailsImpl userDetails) {
     StatusResponseDto statusResponseDto = reviewService.addReview(userDetails.getUser(),
-        reviewRequestDto, storeId);
+        reservationId,reviewRequestDto, storeId);
     return ResponseEntity.ok().body(statusResponseDto);
   }
 

@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReservationDayInfoResponseDto {
-
+  private Long id;
 
   private Integer dayInfo;
   private String timeInfo;

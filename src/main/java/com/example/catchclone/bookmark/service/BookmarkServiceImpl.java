@@ -36,13 +36,14 @@ public class BookmarkServiceImpl implements BookmarkService{
   }
 
   @Override
+  @Transactional
   public StatusResponseDto deleteBookmark(Long bookmarkId, User user) {
 
     bookmarkRepository.findBookmarkById(bookmarkId).orElseThrow(
         ()-> new IllegalArgumentException("해당 북마크를 찾을 수 없습니다!")
     );
 
-    bookmarkRepository.deleteBookmarkById(bookmarkId);
+    bookmarkRepository.removeBookmarkById(bookmarkId);
 
     return new StatusResponseDto(200,"북마크 삭제 완료!");
   }

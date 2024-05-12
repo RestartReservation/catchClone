@@ -29,13 +29,21 @@ public class StoreServiceImpl implements StoreService{
 
   private final StoreCategoryRepository storeCategoryRepository;
 
+
+
+  @Transactional
+  public Store findStoreById(Long storeId){
+
+    return storeRepository.findById(storeId).orElseThrow(
+        ()-> new IllegalArgumentException("존재하지 않는 가게입니다.")
+    );
+  }
+
   @Override
   @Transactional
   public StatusResponseDto addMenu(User user,Long storeId,List<StoreMenuDto> storeMenuDtoList) {
 
-    Store store = storeRepository.findById(storeId).orElseThrow(
-        ()-> new IllegalArgumentException("존재하지 않는 가게입니다.")
-    );
+    Store store = findStoreById(storeId);
 
 
     if(!store.getUser().getId().equals(user.getId())){
@@ -68,8 +76,7 @@ public class StoreServiceImpl implements StoreService{
   @Transactional
   public StatusResponseDto addCategory(Long storeId, StoreCategoryDto storeCategoryDto, User user) {
 
-    Store store = storeRepository.findById(storeId).orElseThrow(
-        ()->new IllegalArgumentException("해당 가맹점은 존재하지 않습니다!"));
+    Store store = findStoreById(storeId);
 
     if(!store.getUser().getId().equals(user.getId()))
       throw new IllegalArgumentException("해당 가맹 점주만 카테고리 등록이 가능합니다!");

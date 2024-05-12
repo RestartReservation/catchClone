@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ct/reservations/bookmarks")
+@RequestMapping("/ct/bookmarks")
 public class BookmarkController {
 
   private final BookmarkService bookmarkService;

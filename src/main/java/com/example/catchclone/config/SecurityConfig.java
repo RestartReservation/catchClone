@@ -56,14 +56,31 @@ public class SecurityConfig {
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
-        .authorizeHttpRequests(request -> request
-            //.requestMatchers(new AntPathRequestMatcher("/**"))
-            .requestMatchers("/ct/users/**")
-            .permitAll()
-            .requestMatchers(HttpMethod.GET,"/ct/stores")
-            .permitAll()
-            .anyRequest().authenticated());
-//
+        .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers("/ct/users/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/ct/stores/**").permitAll()
+            .requestMatchers(HttpMethod.GET,"/ct/reviews/**").permitAll()
+//            .requestMatchers("/ct/reviews/**").hasRole("CUSTOMER")
+//            .requestMatchers(HttpMethod.PUT,"/ct/reviews/**").hasRole("CUSTOMER")
+//            .requestMatchers(HttpMethod.PATCH,"/ct/reviews/**").hasRole("CUSTOMER")
+            .requestMatchers(("/ct/reservations/**")).permitAll()
+            .requestMatchers("/ct/reservations/users").hasRole("CUSTOMER")
+            .anyRequest().authenticated()
+        )  .exceptionHandling(exceptionHandling -> exceptionHandling
+            .authenticationEntryPoint(customAuthenticationEntryPoint) // 인증 실패 시 처리할 핸들러 지정
+            .accessDeniedHandler(customAccessDeniedHandler) // 권한 부족 시 처리할 핸들러 지정
+        );
+//        .authorizeHttpRequests(request -> request
+//            .requestMatchers(new AntPathRequestMatcher("/ct/stores/**"),new AntPathRequestMatcher("/ct/user/**"))
+//            .requestMatchers("/ct/users/**")
+//            .permitAll()
+
+//            .requestMatchers(HttpMethod.GET,"/ct/stores/**")
+//            .permitAll()
+//            .requestMatchers("/ct/reviews/**")
+//            .hasRole("CUSTOMER")
+//            .anyRequest().authenticated());
+
 //        .requestMatchers(
 //            "/sample"
 //        )
@@ -72,9 +89,9 @@ public class SecurityConfig {
 //        .authorizeHttpRequests(request -> request.anyRequest().authenticated());
 
     //401
-    http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint));
-    //403
-    http.exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler(customAccessDeniedHandler));
+//    http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint));
+//    //403
+//    http.exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler(customAccessDeniedHandler));
 
     return http.build();
   }

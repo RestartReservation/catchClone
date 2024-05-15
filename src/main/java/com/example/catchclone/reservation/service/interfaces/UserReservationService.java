@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserReservationService {
-  void addReservation(Long storeId,Long dayId, ReservationRequestDto reservationRequestDto,
+  StatusResponseDto addReservation(Long storeId,Long dayId, ReservationRequestDto reservationRequestDto,
       User user);
   StatusResponseDto cancelReservation(Long reservationId,User user);
   List<UserReservationResponseDto> getUserReservations(Long userId);

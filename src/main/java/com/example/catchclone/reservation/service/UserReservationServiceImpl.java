@@ -78,7 +78,7 @@ public class UserReservationServiceImpl implements UserReservationService {
   @Override
   @Transactional
   @Synchronized // 중복 예약 방지를 위해
-  public void addReservation(Long storeId,Long dayId, ReservationRequestDto reservationRequestDto,User user) {
+  public StatusResponseDto addReservation(Long storeId,Long dayId, ReservationRequestDto reservationRequestDto,User user) {
     //가게 있는지 확인
     //중복 예약 있는지 확인
     // 예약 가능한지 확인
@@ -130,7 +130,7 @@ public class UserReservationServiceImpl implements UserReservationService {
 
     reservationRepository.save(forAddreservation);
     reservationDayInfoRepository.updateCapacity(dayId,reservationDayInfo.getCapacity()-forAddreservation.getNumberOfPeople());
-
+    return new StatusResponseDto(201,"예약완료");
 
   }
 

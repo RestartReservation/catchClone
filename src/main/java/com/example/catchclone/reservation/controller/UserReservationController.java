@@ -29,10 +29,11 @@ public class UserReservationController {
   private final UserReservationService reservationService;
   //예약하기
   @PostMapping("/{storeId}/{dayId}")
-  public void addReservation(@PathVariable Long storeId,@PathVariable Long dayId,@RequestBody
+  public ResponseEntity<StatusResponseDto> addReservation(@PathVariable Long storeId,@PathVariable Long dayId,@RequestBody
   ReservationRequestDto reservationRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-    reservationService.addReservation(storeId,dayId,reservationRequestDto,userDetails.getUser());
+
+    return ResponseEntity.ok().body(reservationService.addReservation(storeId,dayId,reservationRequestDto,userDetails.getUser()));
   }
 
   //예약 취소하기

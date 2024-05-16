@@ -29,14 +29,14 @@ import org.springframework.http.HttpHeaders;
 public class CommentController {
   public static final String COMMENT_URI_API = "/ct/comments";
   private final CommentService commentService;
-  @PostMapping("/{reviewId}")
+  @PostMapping("/write/{reviewId}")
   public ResponseEntity<StatusResponseDto> addComment(@RequestBody CommentRequestDto commentRequestDto, @PathVariable Long reviewId ,@AuthenticationPrincipal
   UserDetailsImpl userDetails){
     StatusResponseDto statusResponseDto = commentService.addComment(userDetails.getUser(),commentRequestDto,reviewId);
     return ResponseEntity.ok().body(statusResponseDto);
   }
 
-  @GetMapping("/{commentId}")
+  @GetMapping("/read/{commentId}")
   public ResponseEntity<CommentResponseDto> getComment(@PathVariable Long commentId){
     CommentResponseDto commentResponseDto = commentService.getComment(commentId);
     HttpHeaders headers = new HttpHeaders();
@@ -44,7 +44,7 @@ public class CommentController {
     return ResponseEntity.ok().headers(headers).body(commentResponseDto);
   }
 
-  @GetMapping("/reviews/{reviewId}")
+  @GetMapping("/read/reviews/{reviewId}")
   public ResponseEntity<List<CommentResponseDto>> getReviewComments(@PathVariable Long reviewId){
     List<CommentResponseDto> commentResponseDtos = commentService.getReviewComments(reviewId);
     HttpHeaders headers = new HttpHeaders();
@@ -52,7 +52,7 @@ public class CommentController {
     return ResponseEntity.ok().headers(headers).body(commentResponseDtos);
   }
 
-  @GetMapping("/users/{userId}")
+  @GetMapping("/read/users/{userId}")
   public ResponseEntity<List<CommentResponseDto>>getUserComments(@PathVariable Long userId){
     List<CommentResponseDto> commentResponseDtos = commentService.getUserComments(userId);
     HttpHeaders headers = new HttpHeaders();
@@ -60,14 +60,14 @@ public class CommentController {
     return ResponseEntity.ok().headers(headers).body(commentResponseDtos);
   }
 
-  @PutMapping("/{commentId}")
+  @PutMapping("/update/{commentId}")
   public ResponseEntity<StatusResponseDto> updateComment(@PathVariable Long commentId, @AuthenticationPrincipal
   UserDetailsImpl userDetails, CommentRequestDto commentRequestDto){
     StatusResponseDto statusResponseDto = commentService.updateComment(userDetails.getUser(),commentId,commentRequestDto);
     return ResponseEntity.ok().body(statusResponseDto);
   }
 
-  @DeleteMapping("/{commentId}")
+  @DeleteMapping("/delete/{commentId}")
   public ResponseEntity<StatusResponseDto> deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal
   UserDetailsImpl userDetails){
     StatusResponseDto statusResponseDto = commentService.deleteComment(userDetails.getUser(),commentId);

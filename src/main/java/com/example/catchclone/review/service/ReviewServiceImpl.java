@@ -35,12 +35,12 @@ public class ReviewServiceImpl implements ReviewService {
   private final UserReservationService userReservationService;
   @Override
   @Transactional
-  public StatusResponseDto addReview(User user,Long reservationId ,ReviewRequestDto reviewRequestDto,Long storeId) {
+  public StatusResponseDto addReview(User user, ReviewRequestDto reviewRequestDto,Long storeId) {
 
     //방문예약이 정상처리(status=v)인지 확인
-    userReservationService.findReservationStatusVById(reservationId);
+    userReservationService.findReservationStatusVById(reviewRequestDto.reservationId());
     //이미 해당 방문건에 대한 리뷰가 있는지 조회
-    reviewRepository.findByReviewByReservationId(reservationId);
+    reviewRepository.findByReviewByReservationId(reviewRequestDto.reservationId());
 
 
 
@@ -53,9 +53,8 @@ public class ReviewServiceImpl implements ReviewService {
   @Override
   @Transactional(readOnly = true)
   public ReviewResponseDto getReview(Long reviewId) {
-    Review review = findReviewByReviewId(reviewId);
     return reviewRepository.responseReviewDtoByReviewId(reviewId).orElseThrow(
-        () -> new IllegalArgumentException("유효하지 않은 id입니다")
+        () -> new IllegalArgumentException("유효하지 않은 id입니다!")
     );
   }
 

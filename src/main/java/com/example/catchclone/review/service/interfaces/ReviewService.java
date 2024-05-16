@@ -12,7 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 
 public interface ReviewService {
-  StatusResponseDto addReview(User user,Long reservationId, ReviewRequestDto reviewRequestDto,Long storeId);
+  StatusResponseDto addReview(User user, ReviewRequestDto reviewRequestDto,Long storeId);
   //단일 리뷰 불러오기
   ReviewResponseDto getReview(Long reviewId);
   //리뷰 업데이트

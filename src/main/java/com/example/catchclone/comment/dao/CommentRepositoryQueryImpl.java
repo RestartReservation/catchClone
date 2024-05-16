@@ -34,6 +34,8 @@ public class CommentRepositoryQueryImpl implements CommentRepositoryQuery{
                     ,comment.commentContent
                     ,user.nickName
                     ,comment.createdAt
+                    ,comment.parentId
+                    ,comment.layer
                     , ExpressionUtils.as
                         (
                             JPAExpressions.select(Wildcard.count)
@@ -61,6 +63,8 @@ public class CommentRepositoryQueryImpl implements CommentRepositoryQuery{
                 ,comment.commentContent
                 ,user.nickName
                 ,comment.createdAt
+                ,comment.parentId
+                ,comment.layer
                 , ExpressionUtils.as
                     (
                         JPAExpressions.select(Wildcard.count)
@@ -88,6 +92,8 @@ public class CommentRepositoryQueryImpl implements CommentRepositoryQuery{
                 ,comment.commentContent
                 ,user.nickName
                 ,comment.createdAt
+                ,comment.parentId
+                ,comment.layer
                 , ExpressionUtils.as
                     (
                         JPAExpressions.select(Wildcard.count)

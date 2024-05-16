@@ -14,6 +14,8 @@ public class CommentResponseDto {
     String commentContent;
     String nickName;
     LocalDateTime createdAt;
+    Long parentId;
+    Integer layer;
     Long likeCount;
 }
 

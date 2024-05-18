@@ -5,6 +5,7 @@ import com.example.catchclone.security.CustomAuthenticationEntryPoint;
 import com.example.catchclone.security.JwtAuthFilter;
 import com.example.catchclone.security.UserDetailsServiceImpl;
 import com.example.catchclone.util.JwtUtil;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -21,12 +22,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class SecurityConfig{
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
   private final JwtUtil jwtUtil;
   private final UserDetailsServiceImpl userDetailsService;
@@ -47,7 +51,14 @@ public class SecurityConfig {
 //        .requestMatchers("/users/sign");
 
   }
-
+  private final String[] ifGetPermitAllArray = {
+      "/ct/stores/**",
+      "/ct/reviews/**",
+      "/ct/reservations/**"
+  };
+  private final String[] hasRoleCustomerArray = {
+      "/ct/reservations/users"
+  };
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
@@ -57,48 +68,21 @@ public class SecurityConfig {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
         .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .requestMatchers("/ct/users/**").permitAll()
-            .requestMatchers(HttpMethod.GET, "/ct/stores/**").permitAll()
-            .requestMatchers(HttpMethod.GET,"/ct/reviews/**").permitAll()
-            .requestMatchers(HttpMethod.POST,"/ct/reviews/write/**").hasRole("CUSTOMER")
-            .requestMatchers(HttpMethod.PUT,"/ct/reviews/update/**").hasRole("CUSTOMER")
-            .requestMatchers(HttpMethod.DELETE,"/ct/reviews/delete/**").hasRole("CUSTOMER")
-//            .requestMatchers(HttpMethod.PATCH,"/ct/reviews/**").hasRole("CUSTOMER")
-            .requestMatchers(HttpMethod.GET,"/ct/reviews/read/**").permitAll()
-            .requestMatchers(HttpMethod.GET,"/ct/comments/read/**").permitAll()
-            .requestMatchers(HttpMethod.POST,"/ct/comments/write/**").hasRole("CUSTOMER")
-            .requestMatchers(HttpMethod.PATCH,"/ct/comments/update/**").hasRole("CUSTOMER")
-                .requestMatchers(HttpMethod.DELETE,"/ct/comments/delete/**").hasRole("CUSTOMER")
-            .requestMatchers(("/ct/reservations/**")).permitAll()
-            .requestMatchers("/ct/reservations/users").hasRole("CUSTOMER")
+            .requestMatchers(HttpMethod.GET,ifGetPermitAllArray).permitAll()
+            .requestMatchers(HttpMethod.POST,"/ct/reviews/**").hasRole("CUSTOMER")
+            .requestMatchers(HttpMethod.PUT,"/ct/reviews/**").hasRole("CUSTOMER")
+            .requestMatchers(HttpMethod.DELETE,"/ct/reviews/**").hasRole("CUSTOMER")
+            .requestMatchers(HttpMethod.PATCH,"/ct/reviews/**").hasRole("CUSTOMER")
+            .requestMatchers(hasRoleCustomerArray).hasRole("CUSTOMER")
             .anyRequest().authenticated()
         )  .exceptionHandling(exceptionHandling -> exceptionHandling
             .authenticationEntryPoint(customAuthenticationEntryPoint) // 인증 실패 시 처리할 핸들러 지정
             .accessDeniedHandler(customAccessDeniedHandler) // 권한 부족 시 처리할 핸들러 지정
         );
-//        .authorizeHttpRequests(request -> request
-//            .requestMatchers(new AntPathRequestMatcher("/ct/stores/**"),new AntPathRequestMatcher("/ct/user/**"))
-//            .requestMatchers("/ct/users/**")
-//            .permitAll()
-
-//            .requestMatchers(HttpMethod.GET,"/ct/stores/**")
-//            .permitAll()
-//            .requestMatchers("/ct/reviews/**")
-//            .hasRole("CUSTOMER")
-//            .anyRequest().authenticated());
-
-//        .requestMatchers(
-//            "/sample"
-//        )
-//        .hasAnyRole("SAMPLE")
-//        )
-//        .authorizeHttpRequests(request -> request.anyRequest().authenticated());
-
-    //401
-//    http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint));
-//    //403
-//    http.exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler(customAccessDeniedHandler));
 
     return http.build();
   }
+
 }

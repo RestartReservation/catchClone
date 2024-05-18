@@ -33,7 +33,7 @@ public class ReviewController {
   public static final String REVIEW_URI_API = "/ct/reviews";
   private final ReviewServiceImpl reviewService;
 
-  @PostMapping("/write/{storeId}")
+  @PostMapping("/{storeId}")
   public ResponseEntity<StatusResponseDto> addReview(@RequestBody ReviewRequestDto reviewRequestDto,
       @PathVariable Long storeId, @AuthenticationPrincipal
   UserDetailsImpl userDetails) {
@@ -42,7 +42,7 @@ public class ReviewController {
     return ResponseEntity.ok().body(statusResponseDto);
   }
 
-  @GetMapping("/read/{reviewId}")
+  @GetMapping("/{reviewId}")
   public ResponseEntity<ReviewResponseDto> getReview(@PathVariable Long reviewId) {
     ReviewResponseDto reviewResponseDto = reviewService.getReview(reviewId);
     HttpHeaders headers = new HttpHeaders();
@@ -51,7 +51,7 @@ public class ReviewController {
   }
 
   //store 리뷰 모두 조회(페이징 필요)
-  @GetMapping("/read/stores/{storeId}")
+  @GetMapping("/stores/{storeId}")
   public ResponseEntity<List<ReviewResponseDto>> getStoreReviews(@PathVariable Long storeId) {
     List<ReviewResponseDto> dtoList = reviewService.getStoreReviewsByStoreId(storeId);
     HttpHeaders headers = new HttpHeaders();
@@ -59,7 +59,7 @@ public class ReviewController {
     return ResponseEntity.ok().headers(headers).body(dtoList);
   }
 
-  @PatchMapping("/update/{reviewId}")
+  @PatchMapping("/{reviewId}")
   public ResponseEntity<StatusResponseDto> updateReview(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails,
       @RequestBody UpdateReviewRequestDto updateReviewRequestDto){
     StatusResponseDto statusResponseDto = reviewService.updateReview(reviewId,
@@ -67,7 +67,7 @@ public class ReviewController {
     return ResponseEntity.ok().body(statusResponseDto);
   }
 
-  @DeleteMapping("/delete/{reviewId}")
+  @DeleteMapping("/{reviewId}")
   public ResponseEntity<StatusResponseDto> deleteReview(@PathVariable Long reviewId, @AuthenticationPrincipal
   UserDetailsImpl userDetails){
     StatusResponseDto statusResponseDto = reviewService.deleteReview(userDetails.getUser(),reviewId);

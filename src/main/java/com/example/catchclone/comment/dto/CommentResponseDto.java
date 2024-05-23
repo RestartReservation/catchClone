@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CommentResponseDto {
-    Long CommentId;
+    Long id;
     Long userId;
     String commentContent;
     String nickName;

@@ -54,7 +54,8 @@ public class SecurityConfig{
   private final String[] ifGetPermitAllArray = {
       "/ct/stores/**",
       "/ct/reviews/**",
-      "/ct/reservations/**"
+      "/ct/reservations/**",
+      "/ct/comments/**"
   };
   private final String[] hasRoleCustomerArray = {
       "/ct/reservations/users"
@@ -75,6 +76,10 @@ public class SecurityConfig{
             .requestMatchers(HttpMethod.PUT,"/ct/reviews/**").hasRole("CUSTOMER")
             .requestMatchers(HttpMethod.DELETE,"/ct/reviews/**").hasRole("CUSTOMER")
             .requestMatchers(HttpMethod.PATCH,"/ct/reviews/**").hasRole("CUSTOMER")
+            .requestMatchers(HttpMethod.POST,"/ct/comments/**").hasRole("CUSTOMER")
+            .requestMatchers(HttpMethod.PUT,"/ct/comments/**").hasRole("CUSTOMER")
+            .requestMatchers(HttpMethod.DELETE,"/ct/comments/**").hasRole("CUSTOMER")
+            .requestMatchers(HttpMethod.PATCH,"/ct/comments/**").hasRole("CUSTOMER")
             .requestMatchers(hasRoleCustomerArray).hasRole("CUSTOMER")
             .anyRequest().authenticated()
         )  .exceptionHandling(exceptionHandling -> exceptionHandling

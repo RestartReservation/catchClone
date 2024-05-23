@@ -42,9 +42,10 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
             .select(
                 Projections.bean(
                     ReviewResponseDto.class
-                    , review.id
+                    , review.id.as("reviewId")
+                    , review.reviewTitle
                     , review.reviewContent
-                    , review.totalRating
+                    , review.tasteRating
                     , review.atmosphereRating
                     , review.serviceRating
                     , review.totalRating

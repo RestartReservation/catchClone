@@ -3,6 +3,7 @@ package com.example.catchclone.user.service;
 
 import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.user.dto.UserLoginRequestDto;
+import com.example.catchclone.user.dto.UserProfileResponseDto;
 import com.example.catchclone.user.dto.UserRequestDto;
 import com.example.catchclone.user.entity.User;
 import com.example.catchclone.user.repository.UserRepository;
@@ -66,11 +67,17 @@ public class UserServiceImpl implements UserService{
   }
 
   @Override
-  @Transactional
   public User findUserByUserId(Long userId) {
     return userRepository.findById(userId).orElseThrow(
         () -> new IllegalArgumentException("유효하지 않은 Id입니다")
     );
 
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public UserProfileResponseDto getUserProfile(Long userId) {
+    User user = findUserByUserId(userId);
+    return new UserProfileResponseDto(user.getNickName(),user.getPhoneNumber(),user.getAboutMe(),user.getProfileUrl());
   }
 }

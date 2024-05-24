@@ -58,7 +58,9 @@ public class SecurityConfig{
       "/ct/comments/**"
   };
   private final String[] hasRoleCustomerArray = {
-      "/ct/reservations/users"
+      "/ct/reservations/users",
+      "/ct/bookmarks/**",
+      "/ct/likes/**"
   };
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

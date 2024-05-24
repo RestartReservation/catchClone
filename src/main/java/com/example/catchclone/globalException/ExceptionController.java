@@ -3,6 +3,9 @@ package com.example.catchclone.globalException;
 
 
 import com.example.catchclone.common.dto.StatusResponseDto;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import java.nio.charset.StandardCharsets;
@@ -54,5 +57,33 @@ public class ExceptionController {
     httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return new ResponseEntity<>(statusResponse, httpHeaders,
         HttpStatus.FORBIDDEN);
+  }
+
+  @ExceptionHandler(JwtException.class)
+  private ResponseEntity<StatusResponseDto> JwtExceptionHandler(JwtException e) {
+    StatusResponseDto statusResponse = new StatusResponseDto(HttpStatus.UNAUTHORIZED.value(),
+        e.getMessage());
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(statusResponse);
+  }
+
+  @ExceptionHandler(SecurityException.class)
+  private ResponseEntity<StatusResponseDto> SecurityExceptionHandler(SecurityException e) {
+    StatusResponseDto statusResponse = new StatusResponseDto(HttpStatus.UNAUTHORIZED.value(),
+        e.getMessage());
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(statusResponse);
+  }
+
+  @ExceptionHandler(MalformedJwtException.class)
+  private ResponseEntity<StatusResponseDto> MalformedJwtExceptionHandler(MalformedJwtException e) {
+    StatusResponseDto statusResponse = new StatusResponseDto(HttpStatus.UNAUTHORIZED.value(),
+        e.getMessage());
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(statusResponse);
+  }
+
+  @ExceptionHandler(SignatureException.class)
+  private ResponseEntity<StatusResponseDto> SignatureExceptionHandler(SignatureException e) {
+    StatusResponseDto statusResponse = new StatusResponseDto(HttpStatus.UNAUTHORIZED.value(),
+        e.getMessage());;
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(statusResponse);
   }
 }

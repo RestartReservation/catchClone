@@ -100,9 +100,8 @@ public class StoreServiceImpl implements StoreService{
 
   @Override
   @Transactional(readOnly = true)
-  public StoreDetailsResponseDto getStore(Long storeId) {
-    Store store = findStoreByStoreId(storeId);
-    return StoreDetailsResponseDto.from(store);
+  public StoreDetailsResponseDto getStoreDetails(Long storeId) {
+    return storeRepository.getStoreDetails(storeId);
   }
 
   @Override

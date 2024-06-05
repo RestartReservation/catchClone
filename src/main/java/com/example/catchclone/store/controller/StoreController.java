@@ -63,7 +63,7 @@ public class StoreController {
 
   @GetMapping("/{storeId}")
   public ResponseEntity<StoreDetailsResponseDto> getStore(@PathVariable Long storeId){
-    StoreDetailsResponseDto storeDetails = storeService.getStore(storeId);
+    StoreDetailsResponseDto storeDetails = storeService.getStoreDetails(storeId);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return ResponseEntity.ok().headers(headers).body(storeDetails);

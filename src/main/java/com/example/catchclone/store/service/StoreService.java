@@ -21,7 +21,7 @@ public interface StoreService {
 
   StatusResponseDto addCategory(Long storeId, StoreCategoryDto storeCategoryDto,User user);
   Page<StoreIndexResponseDto> getStores(StorePageDto storePageDto);
-  StoreDetailsResponseDto getStore(Long storeId);
+  StoreDetailsResponseDto getStoreDetails(Long storeId);
 
   Store findStoreByStoreId(Long storeId);
 }

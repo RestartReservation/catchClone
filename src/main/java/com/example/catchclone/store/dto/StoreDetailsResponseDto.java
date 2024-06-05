@@ -2,6 +2,8 @@ package com.example.catchclone.store.dto;
 
 
 import com.example.catchclone.store.entity.Store;
+import com.example.catchclone.store.entity.StoreMenu;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +24,10 @@ public class StoreDetailsResponseDto {
   private String reservationTypeFlag; //예약 지정일자 오픈 여부(Y,N)
   private String regularHoliday; //정기 휴무일
   private String storeHomepage; //홈페이지 주소
+  private List<StoreMenuDto> storeMenuDtoList;
 
-  public static StoreDetailsResponseDto from(Store store){
-    return new StoreDetailsResponseDto(store.getStoreName(),store.getStoreLocation(),store.getStarRate(),store.getTimeDetail(),store.getStorePhoneNumber(),store.getAboutStore()
-    ,store.getStoreNotification(),store.getReservationTypeFlag(),store.getRegularHoliday(),store.getStoreHomepage());
-  }
+//  public static StoreDetailsResponseDto from(Store store){
+//    return new StoreDetailsResponseDto(store.getStoreName(),store.getStoreLocation(),store.getStarRate(),store.getTimeDetail(),store.getStorePhoneNumber(),store.getAboutStore()
+//    ,store.getStoreNotification(),store.getReservationTypeFlag(),store.getRegularHoliday(),store.getStoreHomepage());
+//  }
 }

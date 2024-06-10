@@ -16,12 +16,8 @@ public interface StoreService {
 
 
   StatusResponseDto addStore(StoreRequestDto storeRequestDto, User user);
-
-  StatusResponseDto addMenu(User user,Long storeId,List<StoreMenuDto> storeMenuDtoList);
-
   StatusResponseDto addCategory(Long storeId, StoreCategoryDto storeCategoryDto,User user);
   Page<StoreIndexResponseDto> getStores(StorePageDto storePageDto);
   StoreDetailsResponseDto getStoreDetails(Long storeId);
-
   Store findStoreByStoreId(Long storeId);
 }

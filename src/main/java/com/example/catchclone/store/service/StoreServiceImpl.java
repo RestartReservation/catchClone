@@ -39,24 +39,6 @@ public class StoreServiceImpl implements StoreService{
     );
   }
 
-  @Override
-  @Transactional
-  public StatusResponseDto addMenu(User user,Long storeId,List<StoreMenuDto> storeMenuDtoList) {
-
-    Store store = findStoreById(storeId);
-
-
-    if(!store.getUser().getId().equals(user.getId())){
-      throw new IllegalArgumentException("해당 가맹 점주가 아닙니다!");
-    }
-
-
-    storeMenuDtoList.stream()
-        .map(st -> new StoreMenu(store, st))
-        .forEach(storeMenuRepository::save);
-
-    return new StatusResponseDto(201,"메뉴 등록이 완료되었습니다!");
-  }
 
   @Override
   @Transactional

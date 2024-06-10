@@ -1,5 +1,6 @@
 package com.example.catchclone.store.entity;
 
+import com.example.catchclone.store.dto.StoreMenuAddDto;
 import com.example.catchclone.store.dto.StoreMenuDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,13 +49,13 @@ public class StoreMenu {
 
   }
 
-  public StoreMenu(Store store, StoreMenuDto storeMenuDto){
+  public StoreMenu(Store store, StoreMenuAddDto storeMenuAddDto){
 
     this.store = store;
-    this.menuNm = storeMenuDto.getMenuNm();
-    this.menuUrl = storeMenuDto.getMenuUrl();
-    this.menuPrice = storeMenuDto.getMenuPrice();
-    this.menuMain = storeMenuDto.getMenuMain();
+    this.menuNm = storeMenuAddDto.menuNm();
+    this.menuUrl = storeMenuAddDto.menuUrl();
+    this.menuPrice = storeMenuAddDto.menuPrice();
+    this.menuMain = storeMenuAddDto.menuMain();
 
   }
 

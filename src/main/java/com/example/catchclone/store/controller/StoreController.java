@@ -39,13 +39,6 @@ public class StoreController {
     return ResponseEntity.ok().body(storeService.addStore(storeRequestDto, userDetails.getUser()));
   }
 
-  @PostMapping("/{storeId}")
-  public ResponseEntity<StatusResponseDto> addMenu(@PathVariable Long storeId,
-      @RequestBody List<StoreMenuDto> storeMenuDtoList,
-      @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return ResponseEntity.ok()
-        .body(storeService.addMenu(userDetails.getUser(), storeId, storeMenuDtoList));
-  }
 
   @PostMapping("/categories/{storeId}")
   public ResponseEntity<StatusResponseDto> addCategory(@PathVariable Long storeId,@RequestBody

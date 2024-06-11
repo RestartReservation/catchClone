@@ -37,4 +37,11 @@ public class StoreMenuServiceImpl implements StoreMenuService{
     return new StatusResponseDto(201,"메뉴 등록이 완료되었습니다!");
   }
 
+  @Override
+  public List<StoreMenuDto> getStoreMenu(Long storeId) {
+    Store store = storeService.findStoreByStoreId(storeId);
+    List<StoreMenu> menuList = storeMenuRepository.findAllByStore(store);
+    return menuList.stream().map(StoreMenuDto::from).toList();
+  }
+
 }

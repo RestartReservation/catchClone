@@ -55,7 +55,8 @@ public class SecurityConfig{
       "/ct/stores/**",
       "/ct/reviews/**",
       "/ct/reservations/**",
-      "/ct/comments/**"
+      "/ct/comments/**",
+      "/ct/stores/menu/**"
   };
   private final String[] hasRoleCustomerArray = {
       "/ct/reservations/users",
@@ -83,6 +84,10 @@ public class SecurityConfig{
             .requestMatchers(HttpMethod.DELETE,"/ct/comments/**").hasRole("CUSTOMER")
             .requestMatchers(HttpMethod.PATCH,"/ct/comments/**").hasRole("CUSTOMER")
             .requestMatchers(hasRoleCustomerArray).hasRole("CUSTOMER")
+            .requestMatchers(HttpMethod.POST,"/ct/stores/menu/**").hasRole("OWNER")
+            .requestMatchers(HttpMethod.PATCH,"/ct/stores/menu/**").hasRole("OWNER")
+            .requestMatchers(HttpMethod.PUT,"/ct/stores/menu/**").hasRole("OWNER")
+            .requestMatchers(HttpMethod.DELETE,"/ct/stores/menu/**").hasRole("OWNER")
             .anyRequest().authenticated()
         )  .exceptionHandling(exceptionHandling -> exceptionHandling
             .authenticationEntryPoint(customAuthenticationEntryPoint) // 인증 실패 시 처리할 핸들러 지정

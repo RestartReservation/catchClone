@@ -5,11 +5,13 @@ import com.example.catchclone.reservation.dao.ReservationRepository;
 import com.example.catchclone.reservation.dto.ReservationDayInfoResponseDto;
 import com.example.catchclone.reservation.entity.Reservation;
 import com.example.catchclone.reservation.service.interfaces.UserReservationService;
+import com.example.catchclone.review.dao.ReviewPictureRepository;
 import com.example.catchclone.review.dao.ReviewRepository;
 import com.example.catchclone.review.dto.ReviewRequestDto;
 import com.example.catchclone.review.dto.ReviewResponseDto;
 import com.example.catchclone.review.dto.UpdateReviewRequestDto;
 import com.example.catchclone.review.entity.Review;
+import com.example.catchclone.review.entity.ReviewPicture;
 import com.example.catchclone.review.service.interfaces.ReviewService;
 import com.example.catchclone.user.entity.User;
 import com.example.catchclone.user.service.UserService;
@@ -30,6 +32,7 @@ public class ReviewServiceImpl implements ReviewService {
   private final ReviewRepository reviewRepository;
   private final UserService userService;
   private final ReservationRepository reservationRepository;
+  private final ReviewPictureRepository reviewPictureRepository;
 
 
   private final UserReservationService userReservationService;
@@ -44,10 +47,13 @@ public class ReviewServiceImpl implements ReviewService {
 
 
 
-      Review review = new Review(user.getId(),storeId,reviewRequestDto);
-      reviewRepository.save(review);
-      return new StatusResponseDto(201,"Created");
+    Review review = new Review(user.getId(),storeId,reviewRequestDto);
+    reviewRepository.saveAndFlush(review);
 
+    List<String> urlList = reviewRequestDto.pictureUrl();
+    saveReviewPicture(review,urlList);
+
+    return new StatusResponseDto(201,"Created");
   }
 
   @Override
@@ -99,4 +105,11 @@ public class ReviewServiceImpl implements ReviewService {
   public List<ReviewResponseDto> getStoreReviewsByStoreId(Long storeId) {
     return reviewRepository.findAllByStoreId(storeId);
   }
+
+  private void saveReviewPicture(Review review,List<String> urlList) {
+    urlList.stream()
+        .map(s -> ReviewPicture.builder().pictureUrl(s).review(review).build())
+        .forEach(reviewPictureRepository::save);
+  }
+
 }

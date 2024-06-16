@@ -13,8 +13,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import lombok.Builder;
@@ -90,6 +92,10 @@ public class Review extends TimeStamped {
 
   @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<ReviewLike> likes = new HashSet<>();
+
+  @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ReviewPicture> reviewPicture = new ArrayList<>();
+
   //메서드
   public boolean isWriter(User user,Review review){
     return Objects.equals(user.getId(), review.getUserId());

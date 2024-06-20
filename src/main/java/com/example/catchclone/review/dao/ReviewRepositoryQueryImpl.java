@@ -3,6 +3,7 @@ package com.example.catchclone.review.dao;
 import static com.example.catchclone.like.entity.reviewLike.QReviewLike.reviewLike;
 import static com.example.catchclone.review.entity.QReview.review;
 import static com.example.catchclone.review.entity.QReviewPicture.reviewPicture;
+import static com.example.catchclone.user.entity.QUser.user;
 
 import com.example.catchclone.review.dto.ReviewPictureDto;
 import com.example.catchclone.review.dto.ReviewResponseDto;
@@ -57,6 +58,8 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                     review.serviceRating,
                     review.totalRating,
                     review.createdAt,
+                    user.nickName.as("userNickName"),
+                    user.profileUrl.as("userProfileUrl"),
                     ExpressionUtils.as(
                         JPAExpressions.select(Wildcard.count)
                             .from(reviewLike)
@@ -68,6 +71,7 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
             )
             .from(review)
             .where(review.id.eq(reviewId))
+            .leftJoin(user).on(review.userId.eq(user.id))
             .fetchFirst()
     );
 
@@ -114,6 +118,8 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                     , review.serviceRating
                     , review.totalRating
                     , review.createdAt
+                    , user.nickName.as("userNickName")
+                    , user.profileUrl.as("userProfileUrl")
                     , ExpressionUtils.as
                         (
                             JPAExpressions.select(Wildcard.count)
@@ -124,6 +130,7 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
             )
             .from(review)
             .where(review.storeId.eq(storeId))
+            .leftJoin(user).on(review.userId.eq(user.id))
             .orderBy(review.createdAt.desc())
             .fetch();
 

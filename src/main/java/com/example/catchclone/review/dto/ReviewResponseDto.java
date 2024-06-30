@@ -19,6 +19,8 @@ public class ReviewResponseDto {
   public Float serviceRating;
   public Float totalRating;
   public LocalDateTime createdAt;
+  public String userNickName;
+  public String userProfileUrl;
   public Long likeCount;
   public List<ReviewPictureDto> reviewPictures;
 }

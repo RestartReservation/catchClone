@@ -3,16 +3,22 @@ package com.example.catchclone.review.dao;
 import static com.example.catchclone.like.entity.reviewLike.QReviewLike.reviewLike;
 import static com.example.catchclone.review.entity.QReview.review;
 import static com.example.catchclone.review.entity.QReviewPicture.reviewPicture;
+import static com.example.catchclone.user.entity.QUser.user;
 
+import com.example.catchclone.common.dto.PageDto;
 import com.example.catchclone.review.dto.ReviewPictureDto;
 import com.example.catchclone.review.dto.ReviewResponseDto;
 import com.example.catchclone.review.entity.Review;
+import com.example.catchclone.store.entity.Store;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +27,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -57,6 +66,8 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                     review.serviceRating,
                     review.totalRating,
                     review.createdAt,
+                    user.nickName.as("userNickName"),
+                    user.profileUrl.as("userProfileUrl"),
                     ExpressionUtils.as(
                         JPAExpressions.select(Wildcard.count)
                             .from(reviewLike)
@@ -68,6 +79,7 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
             )
             .from(review)
             .where(review.id.eq(reviewId))
+            .leftJoin(user).on(review.userId.eq(user.id))
             .fetchFirst()
     );
 
@@ -99,33 +111,13 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
 
   @Override
   @Transactional(readOnly = true)
-  public List<ReviewResponseDto> findAllByStoreId(Long storeId) {
+  public Page<ReviewResponseDto> findAllByStoreId(Long storeId, PageDto pageDto) {
+    Pageable pageable = pageDto.toPageable();
+    List<ReviewResponseDto> reviewResponseDtos;
 
-  //List<PictureUrl>을 set하기 위한 dto조회
-   List<ReviewResponseDto> reviewResponseDtos =  jpaQueryFactory
-            .select(
-                Projections.bean(
-                    ReviewResponseDto.class
-                    , review.id.as("reviewId")
-                    , review.reviewTitle
-                    , review.reviewContent
-                    , review.tasteRating
-                    , review.atmosphereRating
-                    , review.serviceRating
-                    , review.totalRating
-                    , review.createdAt
-                    , ExpressionUtils.as
-                        (
-                            JPAExpressions.select(Wildcard.count)
-                                .from(reviewLike)
-                                .leftJoin(reviewLike.review)
-                                .where(reviewLikeEqByStoreId(storeId)),
-                            "likeCount"))
-            )
-            .from(review)
-            .where(review.storeId.eq(storeId))
-            .orderBy(review.createdAt.desc())
-            .fetch();
+    if(Objects.nonNull(pageDto.getSortBy())) reviewResponseDtos = getReviewSortByKeyWord(pageable,pageDto,storeId);
+    else reviewResponseDtos =  getReviewSortByCreatedAt(pageable, storeId);
+
 
    //매개변수로 주어진 storeId를 가지고 있는 review의 reviewPicture 모두 조회
     List<Tuple> reviewPictures = jpaQueryFactory
@@ -165,9 +157,12 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
       }
     }
 
+    //처리된 ReviewResponseDtoMap List로 변환
+    List<ReviewResponseDto> mergeDto =  new ArrayList<>(reviewDtoMap.values());
 
-    //처리된 ReviewResponseDto Map List로 변환해 반환
-    return new ArrayList<>(reviewDtoMap.values());
+    long totalSize = reviewCountQuery().fetch().get(0);
+
+    return PageableExecutionUtils.getPage(mergeDto, pageable, () -> totalSize);
   }
 
   private BooleanExpression reviewLikeEqByReviewId(Long reviewId) {
@@ -175,5 +170,62 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
   }
   private BooleanExpression reviewLikeEqByStoreId(Long storeId) {
     return Objects.nonNull(storeId) ? reviewLike.review.storeId.eq(storeId) : null;
+  }
+
+  private JPAQuery<ReviewResponseDto> query(Long storeId){
+    return  jpaQueryFactory
+        .select(
+            Projections.bean(
+                ReviewResponseDto.class
+                , review.id.as("reviewId")
+                , review.reviewTitle
+                , review.reviewContent
+                , review.tasteRating
+                , review.atmosphereRating
+                , review.serviceRating
+                , review.totalRating
+                , review.createdAt
+                , user.nickName.as("userNickName")
+                , user.profileUrl.as("userProfileUrl")
+                , ExpressionUtils.as
+                    (
+                        JPAExpressions.select(Wildcard.count)
+                            .from(reviewLike)
+                            .leftJoin(reviewLike.review)
+                            .where(reviewLikeEqByStoreId(storeId)),
+                        "likeCount"))
+        )
+        .from(review)
+        .where(review.storeId.eq(storeId))
+        .leftJoin(user).on(review.userId.eq(user.id));
+  }
+
+  private  List<ReviewResponseDto> getReviewSortByKeyWord(Pageable pageable,PageDto pageDto,Long storeId){
+    OrderSpecifier<?> orderSpecifier = getOrderSpecifier(pageDto.getSortBy(),
+        pageDto.isAsc());
+
+    return query(storeId)
+        .orderBy(orderSpecifier)
+        .limit(pageable.getPageSize())
+        .offset(pageable.getOffset())
+        .fetch();
+  }
+
+  private List<ReviewResponseDto> getReviewSortByCreatedAt(Pageable pageable,Long storeId){
+    return query(storeId)
+        .orderBy(review.createdAt.desc())
+        .limit(pageable.getPageSize())
+        .offset(pageable.getOffset())
+        .fetch();
+  }
+
+  private JPAQuery<Long> reviewCountQuery() {
+    return jpaQueryFactory.select(Wildcard.count)
+        .from(review);
+  }
+
+  private OrderSpecifier<?> getOrderSpecifier(String sortBy, boolean isAsc) {
+    PathBuilder<Object> defaultPath = new PathBuilder<>(Store.class, Store.class.getSimpleName());
+    return isAsc ? defaultPath.getString(sortBy).asc() : defaultPath.getString(sortBy).desc();
   }
 }

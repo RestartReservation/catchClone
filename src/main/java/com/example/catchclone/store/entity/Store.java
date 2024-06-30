@@ -54,6 +54,9 @@ public class Store extends TimeStamped {
   @Column
   private String storeHomepage; //홈페이지 주소
 
+  @Column
+  private Float totalRate; // 리뷰 합계
+
   @Builder
   public Store(String storeName, String storeLocation, Float starRate, String timeDetail, String storePhoneNumber, String aboutStore, LocalDateTime createdAt,String storeNotification,String reservationTypeFlag, String regularHoliday,
       String storeHomepage) {
@@ -84,10 +87,16 @@ public class Store extends TimeStamped {
     this.reservationTypeFlag = storeRequestDto.getReservationTypeFlag();
     this.regularHoliday = storeRequestDto.getRegularHoliday();
     this.storeHomepage = storeRequestDto.getStoreHomepage();
+    this.totalRate = 0.0f;// 처음 가맹점 등록할 때 총점 초기화
   }
 
   public Store(String storeName){
     this.storeName = storeName;
+  }
+
+  public void updateStarRate(Float plusStarRate,Float plusSumRate){
+    this.starRate = plusStarRate;
+    this.totalRate+= plusSumRate;
   }
 
   //연관관계

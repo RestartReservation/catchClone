@@ -11,4 +11,6 @@ public interface ReviewRepositoryQuery {
   Optional<Review> findByReviewByReservationId(Long reservationId);
 
   List<ReviewResponseDto> findAllByStoreId(Long storeId);
+
+  Long getReviewCountByStoreId(Long storeId);
 }

@@ -13,6 +13,8 @@ import com.example.catchclone.review.dto.UpdateReviewRequestDto;
 import com.example.catchclone.review.entity.Review;
 import com.example.catchclone.review.entity.ReviewPicture;
 import com.example.catchclone.review.service.interfaces.ReviewService;
+import com.example.catchclone.store.entity.Store;
+import com.example.catchclone.store.service.StoreService;
 import com.example.catchclone.user.entity.User;
 import com.example.catchclone.user.service.UserService;
 import java.util.Optional;
@@ -32,6 +34,8 @@ public class ReviewServiceImpl implements ReviewService {
   private final ReviewRepository reviewRepository;
   private final UserService userService;
   private final ReservationRepository reservationRepository;
+
+  private final StoreService storeService;
   private final ReviewPictureRepository reviewPictureRepository;
 
 
@@ -45,10 +49,22 @@ public class ReviewServiceImpl implements ReviewService {
     //이미 해당 방문건에 대한 리뷰가 있는지 조회
     reviewRepository.findByReviewByReservationId(reviewRequestDto.reservationId());
 
+    //리뷰 별점을 상점 정보에 업데이트 하기위한 구문
+    Store store = storeService.findStoreByStoreId(storeId);
+    Float storeTotalSumRate = store.getTotalRate();
+    Float reviewTotalRate = reviewRequestDto.tasteRating() + reviewRequestDto.serviceRating() + reviewRequestDto.atmosphereRating();
+
+
+    System.out.println(reviewTotalRate);
+
 
 
     Review review = new Review(user.getId(),storeId,reviewRequestDto);
     reviewRepository.saveAndFlush(review);
+
+    Long reviewCount = reviewRepository.getReviewCountByStoreId(storeId);
+    Float storeTotalRate = ((storeTotalSumRate+reviewTotalRate)/3)/reviewCount;
+    store.updateStarRate(storeTotalRate,reviewTotalRate);
 
     List<String> urlList = reviewRequestDto.pictureUrl();
     saveReviewPicture(review,urlList);

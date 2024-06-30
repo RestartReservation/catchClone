@@ -12,5 +12,9 @@ public interface ReviewRepositoryQuery {
 
   Optional<Review> findByReviewByReservationId(Long reservationId);
 
+
   Page<ReviewResponseDto> findAllByStoreId(Long storeId, PageDto pageDto);
+
+  Long getReviewCountByStoreId(Long storeId);
+
 }

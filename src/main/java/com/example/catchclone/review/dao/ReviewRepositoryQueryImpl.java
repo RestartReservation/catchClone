@@ -37,6 +37,15 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
   private final JPAQueryFactory jpaQueryFactory;
 
   @Override
+  public Long getReviewCountByStoreId(Long storeId) {
+
+    return jpaQueryFactory.select(review)
+        .from(review)
+        .where(review.storeId.eq(storeId))
+        .fetchCount();
+  }
+
+  @Override
   public Optional<Review> findByReviewByReservationId(Long reservationId) {
 
     Optional<Review> rs = Optional.ofNullable( jpaQueryFactory.select(review)

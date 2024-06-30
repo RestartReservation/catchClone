@@ -1,9 +1,8 @@
 package com.example.catchclone.review.service;
 
+import com.example.catchclone.common.dto.PageDto;
 import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.reservation.dao.ReservationRepository;
-import com.example.catchclone.reservation.dto.ReservationDayInfoResponseDto;
-import com.example.catchclone.reservation.entity.Reservation;
 import com.example.catchclone.reservation.service.interfaces.UserReservationService;
 import com.example.catchclone.review.dao.ReviewPictureRepository;
 import com.example.catchclone.review.dao.ReviewRepository;
@@ -17,13 +16,11 @@ import com.example.catchclone.store.entity.Store;
 import com.example.catchclone.store.service.StoreService;
 import com.example.catchclone.user.entity.User;
 import com.example.catchclone.user.service.UserService;
-import java.util.Optional;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.model.internal.OptionalTableUpdate;
+
+
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -118,8 +115,8 @@ public class ReviewServiceImpl implements ReviewService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<ReviewResponseDto> getStoreReviewsByStoreId(Long storeId) {
-    return reviewRepository.findAllByStoreId(storeId);
+  public Page<ReviewResponseDto> getStoreReviews(Long storeId, PageDto pageDto) {
+    return reviewRepository.findAllByStoreId(storeId,pageDto);
   }
 
   private void saveReviewPicture(Review review,List<String> urlList) {

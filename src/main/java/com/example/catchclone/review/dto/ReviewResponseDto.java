@@ -1,6 +1,8 @@
 package com.example.catchclone.review.dto;
 
+import com.example.catchclone.review.entity.ReviewPicture;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,5 +19,8 @@ public class ReviewResponseDto {
   public Float serviceRating;
   public Float totalRating;
   public LocalDateTime createdAt;
+  public String userNickName;
+  public String userProfileUrl;
   public Long likeCount;
+  public List<ReviewPictureDto> reviewPictures;
 }

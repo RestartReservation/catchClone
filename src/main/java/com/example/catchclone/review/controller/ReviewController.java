@@ -2,6 +2,7 @@ package com.example.catchclone.review.controller;
 
 import static com.example.catchclone.review.controller.ReviewController.REVIEW_URI_API;
 
+import com.example.catchclone.common.dto.PageDto;
 import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.review.dto.ReviewRequestDto;
 import com.example.catchclone.review.dto.ReviewResponseDto;
@@ -9,8 +10,8 @@ import com.example.catchclone.review.dto.UpdateReviewRequestDto;
 import com.example.catchclone.review.service.ReviewServiceImpl;
 import com.example.catchclone.security.UserDetailsImpl;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,8 +53,9 @@ public class ReviewController {
 
   //store 리뷰 모두 조회(페이징 필요)
   @GetMapping("/stores/{storeId}")
-  public ResponseEntity<List<ReviewResponseDto>> getStoreReviews(@PathVariable Long storeId) {
-    List<ReviewResponseDto> dtoList = reviewService.getStoreReviewsByStoreId(storeId);
+  public ResponseEntity<Page<ReviewResponseDto>> getStoreReviews(@PathVariable Long storeId,
+      PageDto pageDto) {
+    Page<ReviewResponseDto> dtoList = reviewService.getStoreReviews(storeId,pageDto);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return ResponseEntity.ok().headers(headers).body(dtoList);

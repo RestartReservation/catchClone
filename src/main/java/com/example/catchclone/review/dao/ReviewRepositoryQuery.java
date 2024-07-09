@@ -8,12 +8,12 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 
 public interface ReviewRepositoryQuery {
-  Optional<ReviewResponseDto> responseReviewDtoByReviewId(Long reviewId);
+  Optional<ReviewResponseDto> responseReviewDtoByReviewId(Long reviewId,Long lookUpUserId);
 
   Optional<Review> findByReviewByReservationId(Long reservationId);
 
 
-  Page<ReviewResponseDto> findAllByStoreId(Long storeId, PageDto pageDto);
+  Page<ReviewResponseDto> findAllByStoreId(Long storeId, PageDto pageDto,Long lookUpUserId);
 
   Long getReviewCountByStoreId(Long storeId);
 

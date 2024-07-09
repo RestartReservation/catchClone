@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface ReviewService {
   StatusResponseDto addReview(User user, ReviewRequestDto reviewRequestDto,Long storeId);
   //단일 리뷰 불러오기
-  ReviewResponseDto getReview(Long reviewId);
+  ReviewResponseDto getReview(Long reviewId,Long userId);
   //리뷰 업데이트
   StatusResponseDto updateReview( Long reviewId,Long userId,UpdateReviewRequestDto updateReviewRequestDto);
   StatusResponseDto deleteReview(User user, Long reviewId);
   Review findReviewByReviewId(Long reviewId);
 
-  Page<ReviewResponseDto> getStoreReviews(Long storeId, PageDto pageDto);
+  Page<ReviewResponseDto> getStoreReviews(Long storeId, PageDto pageDto,Long userId);
 }

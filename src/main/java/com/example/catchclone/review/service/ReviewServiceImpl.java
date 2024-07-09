@@ -71,8 +71,8 @@ public class ReviewServiceImpl implements ReviewService {
 
   @Override
   @Transactional(readOnly = true)
-  public ReviewResponseDto getReview(Long reviewId) {
-    return reviewRepository.responseReviewDtoByReviewId(reviewId).orElseThrow(
+  public ReviewResponseDto getReview(Long reviewId,Long userId) {
+    return reviewRepository.responseReviewDtoByReviewId(reviewId,userId).orElseThrow(
         () -> new IllegalArgumentException("유효하지 않은 id입니다!")
     );
   }
@@ -115,8 +115,8 @@ public class ReviewServiceImpl implements ReviewService {
 
   @Override
   @Transactional(readOnly = true)
-  public Page<ReviewResponseDto> getStoreReviews(Long storeId, PageDto pageDto) {
-    return reviewRepository.findAllByStoreId(storeId,pageDto);
+  public Page<ReviewResponseDto> getStoreReviews(Long storeId, PageDto pageDto,Long userId) {
+    return reviewRepository.findAllByStoreId(storeId,pageDto,userId);
   }
 
   private void saveReviewPicture(Review review,List<String> urlList) {

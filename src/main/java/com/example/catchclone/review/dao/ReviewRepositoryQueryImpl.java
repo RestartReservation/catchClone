@@ -60,7 +60,7 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
 
   @Override
   @Transactional(readOnly = true)
-  public Optional<ReviewResponseDto> responseReviewDtoByReviewId(Long reviewId) {
+  public Optional<ReviewResponseDto> responseReviewDtoByReviewId(Long reviewId,Long lookUpUserId) {
     // ReviewResponseDto 조회
     Optional<ReviewResponseDto> reviewResponseDto = Optional.ofNullable(
         jpaQueryFactory
@@ -83,6 +83,16 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                             .leftJoin(reviewLike.review)
                             .where(reviewLike.review.id.eq(reviewId)),
                         "likeCount"
+                    ),
+                    ExpressionUtils.as(
+                        JPAExpressions.select(reviewLike.reviewLikeId)
+                            .from(reviewLike)
+                            .where(reviewLike.review.id.eq(reviewId)
+                                .and(reviewLike.reviewLikeId.userId.eq(lookUpUserId)))
+                            .exists()
+                            .when(true).then(true)
+                            .otherwise(false),
+                        "isLiked"
                     )
                 )
             )
@@ -120,12 +130,12 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
 
   @Override
   @Transactional(readOnly = true)
-  public Page<ReviewResponseDto> findAllByStoreId(Long storeId, PageDto pageDto) {
+  public Page<ReviewResponseDto> findAllByStoreId(Long storeId, PageDto pageDto,Long lookUpUserId) {
     Pageable pageable = pageDto.toPageable();
     List<ReviewResponseDto> reviewResponseDtos;
 
-    if(Objects.nonNull(pageDto.getSortBy())) reviewResponseDtos = getReviewSortByKeyWord(pageable,pageDto,storeId);
-    else reviewResponseDtos =  getReviewSortByCreatedAt(pageable, storeId);
+    if(Objects.nonNull(pageDto.getSortBy())) reviewResponseDtos = getReviewSortByKeyWord(pageable,pageDto,storeId,lookUpUserId);
+    else reviewResponseDtos =  getReviewSortByCreatedAt(pageable, storeId,lookUpUserId);
 
 
    //매개변수로 주어진 storeId를 가지고 있는 review의 reviewPicture 모두 조회
@@ -181,7 +191,7 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
     return Objects.nonNull(storeId) ? reviewLike.review.storeId.eq(storeId) : null;
   }
 
-  private JPAQuery<ReviewResponseDto> query(Long storeId){
+  private JPAQuery<ReviewResponseDto> query(Long storeId,Long lookUpUserId){
     return  jpaQueryFactory
         .select(
             Projections.bean(
@@ -202,26 +212,37 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                             .from(reviewLike)
                             .leftJoin(reviewLike.review)
                             .where(reviewLikeEqByStoreId(storeId)),
-                        "likeCount"))
+                        "likeCount"),
+                ExpressionUtils.as(
+                    JPAExpressions.select(reviewLike.reviewLikeId)
+                        .from(reviewLike)
+                        .where(Objects.requireNonNull(reviewLikeEqByStoreId(storeId))
+                            .and(reviewLike.reviewLikeId.userId.eq(lookUpUserId)))
+                        .exists()
+                        .when(true).then(true)
+                        .otherwise(false),
+                    "isLiked"
+                )
+            )
         )
         .from(review)
         .where(review.storeId.eq(storeId))
         .leftJoin(user).on(review.userId.eq(user.id));
   }
 
-  private  List<ReviewResponseDto> getReviewSortByKeyWord(Pageable pageable,PageDto pageDto,Long storeId){
+  private  List<ReviewResponseDto> getReviewSortByKeyWord(Pageable pageable,PageDto pageDto,Long storeId, Long lookUpUserId){
     OrderSpecifier<?> orderSpecifier = getOrderSpecifier(pageDto.getSortBy(),
         pageDto.isAsc());
 
-    return query(storeId)
+    return query(storeId,lookUpUserId)
         .orderBy(orderSpecifier)
         .limit(pageable.getPageSize())
         .offset(pageable.getOffset())
         .fetch();
   }
 
-  private List<ReviewResponseDto> getReviewSortByCreatedAt(Pageable pageable,Long storeId){
-    return query(storeId)
+  private List<ReviewResponseDto> getReviewSortByCreatedAt(Pageable pageable,Long storeId,Long lookUpUserId){
+    return query(storeId,lookUpUserId)
         .orderBy(review.createdAt.desc())
         .limit(pageable.getPageSize())
         .offset(pageable.getOffset())

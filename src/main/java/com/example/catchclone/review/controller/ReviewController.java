@@ -44,8 +44,9 @@ public class ReviewController {
   }
 
   @GetMapping("/{reviewId}")
-  public ResponseEntity<ReviewResponseDto> getReview(@PathVariable Long reviewId) {
-    ReviewResponseDto reviewResponseDto = reviewService.getReview(reviewId);
+  public ResponseEntity<ReviewResponseDto> getReview(@PathVariable Long reviewId, @AuthenticationPrincipal
+  UserDetailsImpl userDetails) {
+    ReviewResponseDto reviewResponseDto = reviewService.getReview(reviewId,userDetails.getUserId());
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return ResponseEntity.ok().headers(headers).body(reviewResponseDto);
@@ -54,8 +55,10 @@ public class ReviewController {
   //store 리뷰 모두 조회(페이징 필요)
   @GetMapping("/stores/{storeId}")
   public ResponseEntity<Page<ReviewResponseDto>> getStoreReviews(@PathVariable Long storeId,
-      PageDto pageDto) {
-    Page<ReviewResponseDto> dtoList = reviewService.getStoreReviews(storeId,pageDto);
+      PageDto pageDto, @AuthenticationPrincipal
+  UserDetailsImpl userDetails) {
+    Page<ReviewResponseDto> dtoList = reviewService.getStoreReviews(storeId,pageDto,
+        userDetails.getUserId());
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return ResponseEntity.ok().headers(headers).body(dtoList);

@@ -61,47 +61,7 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
   @Override
   @Transactional(readOnly = true)
   public Optional<ReviewResponseDto> responseReviewDtoByReviewId(Long reviewId,Long lookUpUserId) {
-    // ReviewResponseDto 조회
-    Optional<ReviewResponseDto> reviewResponseDto = Optional.ofNullable(
-        jpaQueryFactory
-            .select(
-                Projections.bean(
-                    ReviewResponseDto.class,
-                    review.id.as("reviewId"),
-                    review.reviewTitle,
-                    review.reviewContent,
-                    review.tasteRating,
-                    review.atmosphereRating,
-                    review.serviceRating,
-                    review.totalRating,
-                    review.createdAt,
-                    user.nickName.as("userNickName"),
-                    user.profileUrl.as("userProfileUrl"),
-                    ExpressionUtils.as(
-                        JPAExpressions.select(Wildcard.count)
-                            .from(reviewLike)
-                            .leftJoin(reviewLike.review)
-                            .where(reviewLike.review.id.eq(reviewId)),
-                        "likeCount"
-                    ),
-                    ExpressionUtils.as(
-                        JPAExpressions.select(reviewLike.reviewLikeId)
-                            .from(reviewLike)
-                            .where(reviewLike.review.id.eq(reviewId)
-                                .and(reviewLike.reviewLikeId.userId.eq(lookUpUserId)))
-                            .exists()
-                            .when(true).then(true)
-                            .otherwise(false),
-                        "isLiked"
-                    )
-                )
-            )
-            .from(review)
-            .where(review.id.eq(reviewId))
-            .leftJoin(user).on(review.userId.eq(user.id))
-            .fetchFirst()
-    );
-
+    Optional<ReviewResponseDto> reviewResponseDto = lookUpUserId == null ? searchReviewIsNotLoggedIn(reviewId) : searchReviewIsLoggedIn(reviewId,lookUpUserId);
     // ReviewPicture 조회
     List<String> reviewPictures = jpaQueryFactory
         .select(
@@ -230,11 +190,43 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
         .leftJoin(user).on(review.userId.eq(user.id));
   }
 
+  private JPAQuery<ReviewResponseDto> queryIsNotLoggedIn(Long storeId){
+    return  jpaQueryFactory
+        .select(
+            Projections.bean(
+                ReviewResponseDto.class
+                , review.id.as("reviewId")
+                , review.reviewTitle
+                , review.reviewContent
+                , review.tasteRating
+                , review.atmosphereRating
+                , review.serviceRating
+                , review.totalRating
+                , review.createdAt
+                , user.nickName.as("userNickName")
+                , user.profileUrl.as("userProfileUrl")
+                , ExpressionUtils.as
+                    (
+                        JPAExpressions.select(Wildcard.count)
+                            .from(reviewLike)
+                            .leftJoin(reviewLike.review)
+                            .where(reviewLikeEqByStoreId(storeId)),
+                        "likeCount")
+            )
+        )
+        .from(review)
+        .where(review.storeId.eq(storeId))
+        .leftJoin(user).on(review.userId.eq(user.id));
+  }
+
+
   private  List<ReviewResponseDto> getReviewSortByKeyWord(Pageable pageable,PageDto pageDto,Long storeId, Long lookUpUserId){
     OrderSpecifier<?> orderSpecifier = getOrderSpecifier(pageDto.getSortBy(),
         pageDto.isAsc());
 
-    return query(storeId,lookUpUserId)
+    JPAQuery<ReviewResponseDto> query = lookUpUserId == null ? queryIsNotLoggedIn(storeId) : query(storeId,lookUpUserId);
+
+    return query
         .orderBy(orderSpecifier)
         .limit(pageable.getPageSize())
         .offset(pageable.getOffset())
@@ -242,7 +234,9 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
   }
 
   private List<ReviewResponseDto> getReviewSortByCreatedAt(Pageable pageable,Long storeId,Long lookUpUserId){
-    return query(storeId,lookUpUserId)
+    JPAQuery<ReviewResponseDto> query = lookUpUserId == null ? queryIsNotLoggedIn(storeId) : query(storeId,lookUpUserId);
+
+    return query
         .orderBy(review.createdAt.desc())
         .limit(pageable.getPageSize())
         .offset(pageable.getOffset())
@@ -257,5 +251,82 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
   private OrderSpecifier<?> getOrderSpecifier(String sortBy, boolean isAsc) {
     PathBuilder<Object> defaultPath = new PathBuilder<>(Store.class, Store.class.getSimpleName());
     return isAsc ? defaultPath.getString(sortBy).asc() : defaultPath.getString(sortBy).desc();
+  }
+
+  private Optional<ReviewResponseDto> searchReviewIsLoggedIn(Long reviewId,Long lookUpUserId){
+    return Optional.ofNullable(
+        jpaQueryFactory
+            .select(
+                Projections.bean(
+                    ReviewResponseDto.class,
+                    review.id.as("reviewId"),
+                    review.reviewTitle,
+                    review.reviewContent,
+                    review.tasteRating,
+                    review.atmosphereRating,
+                    review.serviceRating,
+                    review.totalRating,
+                    review.createdAt,
+                    user.nickName.as("userNickName"),
+                    user.profileUrl.as("userProfileUrl"),
+                    ExpressionUtils.as(
+                        JPAExpressions.select(Wildcard.count)
+                            .from(reviewLike)
+                            .leftJoin(reviewLike.review)
+                            .where(reviewLike.review.id.eq(reviewId)),
+                        "likeCount"
+                    ),
+                    ExpressionUtils.as(
+                        JPAExpressions.select(reviewLike.reviewLikeId)
+                            .from(reviewLike)
+                            .where(reviewLike.review.id.eq(reviewId)
+                                .and(reviewLike.reviewLikeId.userId.eq(lookUpUserId)))
+                            .exists()
+                            .when(true).then(true)
+                            .otherwise(false),
+                        "isLiked"
+                    )
+                )
+            )
+            .from(review)
+            .where(review.id.eq(reviewId))
+            .leftJoin(user).on(review.userId.eq(user.id))
+            .fetchFirst()
+    );
+
+  }
+
+
+  private Optional<ReviewResponseDto> searchReviewIsNotLoggedIn(Long reviewId){
+    return Optional.ofNullable(
+        jpaQueryFactory
+            .select(
+                Projections.bean(
+                    ReviewResponseDto.class,
+                    review.id.as("reviewId"),
+                    review.reviewTitle,
+                    review.reviewContent,
+                    review.tasteRating,
+                    review.atmosphereRating,
+                    review.serviceRating,
+                    review.totalRating,
+                    review.createdAt,
+                    user.nickName.as("userNickName"),
+                    user.profileUrl.as("userProfileUrl"),
+                    ExpressionUtils.as(
+                        JPAExpressions.select(Wildcard.count)
+                            .from(reviewLike)
+                            .leftJoin(reviewLike.review)
+                            .where(reviewLike.review.id.eq(reviewId)),
+                        "likeCount"
+                    )
+                )
+            )
+            .from(review)
+            .where(review.id.eq(reviewId))
+            .leftJoin(user).on(review.userId.eq(user.id))
+            .fetchFirst()
+    );
+
   }
 }

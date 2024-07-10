@@ -46,7 +46,8 @@ public class ReviewController {
   @GetMapping("/{reviewId}")
   public ResponseEntity<ReviewResponseDto> getReview(@PathVariable Long reviewId, @AuthenticationPrincipal
   UserDetailsImpl userDetails) {
-    ReviewResponseDto reviewResponseDto = reviewService.getReview(reviewId,userDetails.getUserId());
+    Long userId = userDetails == null ? null : userDetails.getUser().getId();
+    ReviewResponseDto reviewResponseDto = reviewService.getReview(reviewId,userId);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return ResponseEntity.ok().headers(headers).body(reviewResponseDto);
@@ -57,8 +58,9 @@ public class ReviewController {
   public ResponseEntity<Page<ReviewResponseDto>> getStoreReviews(@PathVariable Long storeId,
       PageDto pageDto, @AuthenticationPrincipal
   UserDetailsImpl userDetails) {
+    Long userId = userDetails == null ? null : userDetails.getUser().getId();
     Page<ReviewResponseDto> dtoList = reviewService.getStoreReviews(storeId,pageDto,
-        userDetails.getUserId());
+        userId);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return ResponseEntity.ok().headers(headers).body(dtoList);

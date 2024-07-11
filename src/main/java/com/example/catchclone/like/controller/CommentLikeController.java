@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping(COMMENT_LIKE_URI_API)
 public class CommentLikeController {
-  public static final String COMMENT_LIKE_URI_API = "/ct/comments/likes";
+  public static final String COMMENT_LIKE_URI_API = "/ct/likes/comments";
   private final CommentLikeService commentLikeService;
   @PostMapping("/{commentId}")
   public ResponseEntity<StatusResponseDto> requestCommentLike(@PathVariable Long commentId,@AuthenticationPrincipal

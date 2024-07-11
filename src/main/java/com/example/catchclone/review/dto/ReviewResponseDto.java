@@ -22,6 +22,6 @@ public class ReviewResponseDto {
   public String userNickName;
   public String userProfileUrl;
   public Long likeCount;
-  public Boolean isLiked;
+  public Boolean isLiked = false;
   public List<ReviewPictureDto> reviewPictures;
 }

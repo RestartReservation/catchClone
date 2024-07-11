@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping(REVIEW_LIKE_URI_API)
 public class ReviewLikeController {
-  public static final String REVIEW_LIKE_URI_API = "/ct/reviews/likes";
+  public static final String REVIEW_LIKE_URI_API = "/ct/likes/reviews";
   private final ReviewLikeService reviewLikeService;
 
   @PostMapping("/{reviewId}")

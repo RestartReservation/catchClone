@@ -21,6 +21,7 @@ public class ReviewResponseDto {
   public LocalDateTime createdAt;
   public String userNickName;
   public String userProfileUrl;
+  public Long commentCount;
   public Long likeCount;
   public Boolean isLiked = false;
   public List<ReviewPictureDto> reviewPictures;

@@ -1,5 +1,6 @@
 package com.example.catchclone.review.dao;
 
+import static com.example.catchclone.comment.entity.QComment.comment;
 import static com.example.catchclone.like.entity.reviewLike.QReviewLike.reviewLike;
 import static com.example.catchclone.review.entity.QReview.review;
 import static com.example.catchclone.review.entity.QReviewPicture.reviewPicture;
@@ -150,6 +151,9 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
   private BooleanExpression reviewLikeEqByStoreId(Long storeId) {
     return Objects.nonNull(storeId) ? reviewLike.review.storeId.eq(storeId) : null;
   }
+  private BooleanExpression commentEqByStoreId(Long storeId) {
+    return Objects.nonNull(storeId) ? comment.review.storeId.eq(storeId) : null;
+  }
 
   private JPAQuery<ReviewResponseDto> query(Long storeId,Long lookUpUserId){
     return  jpaQueryFactory
@@ -166,7 +170,14 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                 , review.createdAt
                 , user.nickName.as("userNickName")
                 , user.profileUrl.as("userProfileUrl")
-                , ExpressionUtils.as
+                , ExpressionUtils.as(
+                    JPAExpressions.select(Wildcard.count)
+                        .from(comment)
+                        .leftJoin(comment.review)
+                        .where(commentEqByStoreId(storeId)),
+                    "commentCount"
+                ),
+                ExpressionUtils.as
                     (
                         JPAExpressions.select(Wildcard.count)
                             .from(reviewLike)
@@ -205,7 +216,15 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                 , review.createdAt
                 , user.nickName.as("userNickName")
                 , user.profileUrl.as("userProfileUrl")
-                , ExpressionUtils.as
+                ,
+                ExpressionUtils.as(
+                    JPAExpressions.select(Wildcard.count)
+                        .from(comment)
+                        .leftJoin(comment.review)
+                        .where(commentEqByStoreId(storeId)),
+                    "commentCount"
+                ),
+                ExpressionUtils.as
                     (
                         JPAExpressions.select(Wildcard.count)
                             .from(reviewLike)

@@ -177,13 +177,13 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                         .where(commentEqByStoreId(storeId)),
                     "commentCount"
                 ),
-                ExpressionUtils.as
-                    (
-                        JPAExpressions.select(Wildcard.count)
-                            .from(reviewLike)
-                            .leftJoin(reviewLike.review)
-                            .where(reviewLikeEqByStoreId(storeId)),
-                        "likeCount"),
+                ExpressionUtils.as(
+                    JPAExpressions
+                        .select(Wildcard.count)
+                        .from(reviewLike)
+                        .where(reviewLike.review.id.eq(review.id)),
+                    "likeCount"
+                ),
                 ExpressionUtils.as(
                     JPAExpressions.select(reviewLike.reviewLikeId)
                         .from(reviewLike)
@@ -224,13 +224,13 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                         .where(commentEqByStoreId(storeId)),
                     "commentCount"
                 ),
-                ExpressionUtils.as
-                    (
-                        JPAExpressions.select(Wildcard.count)
-                            .from(reviewLike)
-                            .leftJoin(reviewLike.review)
-                            .where(reviewLikeEqByStoreId(storeId)),
-                        "likeCount")
+                ExpressionUtils.as(
+                    JPAExpressions
+                        .select(Wildcard.count)
+                        .from(reviewLike)
+                        .where(reviewLike.review.id.eq(review.id)),
+                    "likeCount"
+                )
             )
         )
         .from(review)
@@ -289,10 +289,10 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                     user.nickName.as("userNickName"),
                     user.profileUrl.as("userProfileUrl"),
                     ExpressionUtils.as(
-                        JPAExpressions.select(Wildcard.count)
+                        JPAExpressions
+                            .select(Wildcard.count)
                             .from(reviewLike)
-                            .leftJoin(reviewLike.review)
-                            .where(reviewLike.review.id.eq(reviewId)),
+                            .where(reviewLike.review.id.eq(review.id)),
                         "likeCount"
                     ),
                     ExpressionUtils.as(
@@ -333,10 +333,10 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                     user.nickName.as("userNickName"),
                     user.profileUrl.as("userProfileUrl"),
                     ExpressionUtils.as(
-                        JPAExpressions.select(Wildcard.count)
+                        JPAExpressions
+                            .select(Wildcard.count)
                             .from(reviewLike)
-                            .leftJoin(reviewLike.review)
-                            .where(reviewLike.review.id.eq(reviewId)),
+                            .where(reviewLike.review.id.eq(review.id)),
                         "likeCount"
                     )
                 )

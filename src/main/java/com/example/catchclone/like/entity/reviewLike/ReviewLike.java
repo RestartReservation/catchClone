@@ -5,6 +5,7 @@ import com.example.catchclone.user.entity.User;
 import com.example.catchclone.util.TimeStamped;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import lombok.AccessLevel;
@@ -37,11 +38,13 @@ public class ReviewLike extends TimeStamped {
 
   //연관관계
   @ManyToOne
-  @MapsId("user_id")
-  User user;
+  @MapsId("userId")
+  @JoinColumn(name = "user_id")
+  private User user;
 
   @ManyToOne
-  @MapsId("Review_id")
-  Review review;
+  @MapsId("reviewId")
+  @JoinColumn(name = "review_id")
+  private Review review;
 
 }

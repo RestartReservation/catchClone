@@ -1,6 +1,7 @@
 package com.example.catchclone.review.dao;
 
 import com.example.catchclone.common.dto.PageDto;
+import com.example.catchclone.review.dto.ReviewRatingResponseDto;
 import com.example.catchclone.review.dto.ReviewResponseDto;
 import com.example.catchclone.review.entity.Review;
 import java.util.List;
@@ -17,4 +18,5 @@ public interface ReviewRepositoryQuery {
 
   Long getReviewCountByStoreId(Long storeId);
 
+  List<ReviewRatingResponseDto> findAllRatingByStoreId(Long storeId);
 }

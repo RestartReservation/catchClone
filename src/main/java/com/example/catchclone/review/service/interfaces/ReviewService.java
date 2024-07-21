@@ -2,6 +2,7 @@ package com.example.catchclone.review.service.interfaces;
 
 import com.example.catchclone.common.dto.PageDto;
 import com.example.catchclone.common.dto.StatusResponseDto;
+import com.example.catchclone.review.dto.ReviewRatingResponseDto;
 import com.example.catchclone.review.dto.ReviewRequestDto;
 import com.example.catchclone.review.dto.ReviewResponseDto;
 import com.example.catchclone.review.dto.UpdateReviewRequestDto;
@@ -23,4 +24,5 @@ public interface ReviewService {
   Review findReviewByReviewId(Long reviewId);
 
   Page<ReviewResponseDto> getStoreReviews(Long storeId, PageDto pageDto,Long userId);
+  List<ReviewRatingResponseDto> getStoreReviewsRating(Long storeId);
 }

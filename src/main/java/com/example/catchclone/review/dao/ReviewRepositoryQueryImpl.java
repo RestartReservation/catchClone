@@ -8,6 +8,7 @@ import static com.example.catchclone.user.entity.QUser.user;
 
 import com.example.catchclone.common.dto.PageDto;
 import com.example.catchclone.review.dto.ReviewPictureDto;
+import com.example.catchclone.review.dto.ReviewRatingResponseDto;
 import com.example.catchclone.review.dto.ReviewResponseDto;
 import com.example.catchclone.review.entity.Review;
 import com.example.catchclone.store.entity.Store;
@@ -44,6 +45,23 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
         .from(review)
         .where(review.storeId.eq(storeId))
         .fetchCount();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<ReviewRatingResponseDto> findAllRatingByStoreId(Long storeId) {
+    return jpaQueryFactory
+        .select(
+            Projections.bean(
+                ReviewRatingResponseDto.class
+                , review.tasteRating
+                , review.atmosphereRating
+                , review.serviceRating
+            )
+        )
+        .from(review)
+        .where(review.storeId.eq(storeId))
+        .fetch();
   }
 
   @Override

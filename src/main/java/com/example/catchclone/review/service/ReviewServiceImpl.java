@@ -6,6 +6,7 @@ import com.example.catchclone.reservation.dao.ReservationRepository;
 import com.example.catchclone.reservation.service.interfaces.UserReservationService;
 import com.example.catchclone.review.dao.ReviewPictureRepository;
 import com.example.catchclone.review.dao.ReviewRepository;
+import com.example.catchclone.review.dto.ReviewRatingResponseDto;
 import com.example.catchclone.review.dto.ReviewRequestDto;
 import com.example.catchclone.review.dto.ReviewResponseDto;
 import com.example.catchclone.review.dto.UpdateReviewRequestDto;
@@ -117,6 +118,11 @@ public class ReviewServiceImpl implements ReviewService {
   @Transactional(readOnly = true)
   public Page<ReviewResponseDto> getStoreReviews(Long storeId, PageDto pageDto,Long userId) {
     return reviewRepository.findAllByStoreId(storeId,pageDto,userId);
+  }
+
+  @Override
+  public List<ReviewRatingResponseDto> getStoreReviewsRating(Long storeId) {
+    return reviewRepository.findAllRatingByStoreId(storeId);
   }
 
   private void saveReviewPicture(Review review,List<String> urlList) {

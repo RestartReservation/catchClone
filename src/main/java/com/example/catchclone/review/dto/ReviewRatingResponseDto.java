@@ -1,0 +1,14 @@
+package com.example.catchclone.review.dto;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class ReviewRatingResponseDto {
+  public Float tasteRating;
+  public Float atmosphereRating;
+  public Float serviceRating;
+}

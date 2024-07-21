@@ -4,12 +4,14 @@ import static com.example.catchclone.review.controller.ReviewController.REVIEW_U
 
 import com.example.catchclone.common.dto.PageDto;
 import com.example.catchclone.common.dto.StatusResponseDto;
+import com.example.catchclone.review.dto.ReviewRatingResponseDto;
 import com.example.catchclone.review.dto.ReviewRequestDto;
 import com.example.catchclone.review.dto.ReviewResponseDto;
 import com.example.catchclone.review.dto.UpdateReviewRequestDto;
 import com.example.catchclone.review.service.ReviewServiceImpl;
 import com.example.catchclone.security.UserDetailsImpl;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -61,6 +63,15 @@ public class ReviewController {
     Long userId = userDetails == null ? null : userDetails.getUser().getId();
     Page<ReviewResponseDto> dtoList = reviewService.getStoreReviews(storeId,pageDto,
         userId);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+    return ResponseEntity.ok().headers(headers).body(dtoList);
+  }
+
+  //store 리뷰 점수 조회
+  @GetMapping("/stores/rating/{storeId}")
+  public ResponseEntity<List<ReviewRatingResponseDto>> getStoreReviewsRating(@PathVariable Long storeId) {
+    List<ReviewRatingResponseDto> dtoList = reviewService.getStoreReviewsRating(storeId);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return ResponseEntity.ok().headers(headers).body(dtoList);

@@ -2,9 +2,11 @@ package com.example.catchclone.follow.service;
 
 import com.example.catchclone.common.dto.StatusResponseDto;
 import com.example.catchclone.follow.dao.FollowRepository;
+import com.example.catchclone.follow.dto.FollowResponseDto;
 import com.example.catchclone.follow.entity.Follow;
 import com.example.catchclone.user.entity.User;
 import com.example.catchclone.user.service.UserService;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,13 @@ public class FollowServiceImpl implements FollowService{
   private final FollowRepository followRepository;
 
   private final UserService userService;
+
+  @Override
+  @Transactional
+  public List<FollowResponseDto> getMyFollowers(Long ownerId) {
+
+    return followRepository.findFollowersByOwnerId(ownerId);
+  }
 
   @Override
   @Transactional

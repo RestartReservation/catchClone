@@ -203,13 +203,12 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                     "likeCount"
                 ),
                 ExpressionUtils.as(
-                    JPAExpressions.select(reviewLike.reviewLikeId)
+                    JPAExpressions.selectOne()
                         .from(reviewLike)
-                        .where(Objects.requireNonNull(reviewLikeEqByStoreId(storeId))
-                            .and(reviewLike.reviewLikeId.userId.eq(lookUpUserId)))
+                        .where(reviewLike.review.id.eq(review.id)
+                            .and(reviewLike.user.id.eq(lookUpUserId)))
                         .exists()
-                        .when(true).then(true)
-                        .otherwise(false),
+                    ,
                     "isLiked"
                 )
             )
@@ -314,13 +313,12 @@ public class ReviewRepositoryQueryImpl implements ReviewRepositoryQuery{
                         "likeCount"
                     ),
                     ExpressionUtils.as(
-                        JPAExpressions.select(reviewLike.reviewLikeId)
+                        JPAExpressions.selectOne()
                             .from(reviewLike)
                             .where(reviewLike.review.id.eq(reviewId)
-                                .and(reviewLike.reviewLikeId.userId.eq(lookUpUserId)))
+                                .and(reviewLike.user.id.eq(lookUpUserId)))
                             .exists()
-                            .when(true).then(true)
-                            .otherwise(false),
+                        ,
                         "isLiked"
                     )
                 )

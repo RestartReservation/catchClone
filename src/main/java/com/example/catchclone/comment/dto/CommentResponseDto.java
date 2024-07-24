@@ -13,6 +13,7 @@ public class CommentResponseDto {
     Long userId;
     String commentContent;
     String nickName;
+    String profileUrl;
     LocalDateTime createdAt;
     Long parentId;
     Integer layer;

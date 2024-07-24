@@ -33,6 +33,7 @@ public class CommentRepositoryQueryImpl implements CommentRepositoryQuery{
                     ,comment.userId
                     ,comment.commentContent
                     ,user.nickName
+                    ,user.profileUrl
                     ,comment.createdAt
                     ,comment.parentId
                     ,comment.layer
@@ -62,6 +63,7 @@ public class CommentRepositoryQueryImpl implements CommentRepositoryQuery{
                 ,comment.userId
                 ,comment.commentContent
                 ,user.nickName
+                ,user.profileUrl
                 ,comment.createdAt
                 ,comment.parentId
                 ,comment.layer
@@ -91,6 +93,7 @@ public class CommentRepositoryQueryImpl implements CommentRepositoryQuery{
                 ,comment.userId
                 ,comment.commentContent
                 ,user.nickName
+                ,user.profileUrl
                 ,comment.createdAt
                 ,comment.parentId
                 ,comment.layer

@@ -18,5 +18,6 @@ public class CommentResponseDto {
     Long parentId;
     Integer layer;
     Long likeCount;
+    Boolean isLiked = false;
 }
 

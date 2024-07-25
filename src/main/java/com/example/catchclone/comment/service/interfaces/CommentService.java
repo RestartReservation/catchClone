@@ -12,7 +12,7 @@ public interface CommentService {
   //단일 댓글 불러오기
   CommentResponseDto getComment(Long commentId);
   //리뷰 댓글 리스트 불러오기
-  List<CommentResponseDto> getReviewComments(Long reviewId);
+  List<CommentResponseDto> getReviewComments(Long reviewId,Long userId);
   //유저의 댓글 리스트 가져오기
   List<CommentResponseDto> getUserComments(Long commentId);
   //댓글 수정하기

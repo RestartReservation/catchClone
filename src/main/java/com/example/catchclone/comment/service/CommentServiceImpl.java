@@ -49,8 +49,8 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<CommentResponseDto> getReviewComments(Long reviewId) {
-    return commentRepository.findCommentsByReviewId(reviewId);
+  public List<CommentResponseDto> getReviewComments(Long reviewId,Long userId) {
+    return commentRepository.findCommentsByReviewId(reviewId,userId);
   }
 
   @Override

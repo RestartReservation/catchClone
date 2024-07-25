@@ -2,6 +2,8 @@ package com.example.catchclone.comment.dao;
 
 import static com.example.catchclone.comment.entity.QComment.comment;
 import static com.example.catchclone.like.entity.commentLike.QCommentLike.commentLike;
+import static com.example.catchclone.like.entity.reviewLike.QReviewLike.reviewLike;
+import static com.example.catchclone.review.entity.QReview.review;
 import static com.example.catchclone.user.entity.QUser.user;
 
 import com.example.catchclone.comment.dto.CommentResponseDto;
@@ -84,7 +86,7 @@ public class CommentRepositoryQueryImpl implements CommentRepositoryQuery{
 
   @Override
   @Transactional
-  public List<CommentResponseDto> findCommentsByReviewId(Long reviewId) {
+  public List<CommentResponseDto> findCommentsByReviewId(Long reviewId,Long lookUpUserId) {
     return jpaQueryFactory
         .select(
             Projections.bean(
@@ -104,7 +106,16 @@ public class CommentRepositoryQueryImpl implements CommentRepositoryQuery{
                             .leftJoin(commentLike.comment)
                             .where(commentLikeEqByReviewId(reviewId)),
                         "likeCount")
+              ,ExpressionUtils.as(
+                JPAExpressions.selectOne()
+                    .from(commentLike)
+                    .where(commentLike.comment.id.eq(comment.id)
+                        .and(commentLike.user.id.eq(lookUpUserId)))
+                    .exists()
+                ,
+                "isLiked"
             ))
+        )
         .from(comment)
         .leftJoin(user).on(user.id.eq(comment.userId))
         .where(comment.review.id.eq(reviewId))

@@ -45,8 +45,10 @@ public class CommentController {
   }
 
   @GetMapping("/reviews/{reviewId}")
-  public ResponseEntity<List<CommentResponseDto>> getReviewComments(@PathVariable Long reviewId){
-    List<CommentResponseDto> commentResponseDtos = commentService.getReviewComments(reviewId);
+  public ResponseEntity<List<CommentResponseDto>> getReviewComments(@PathVariable Long reviewId, @AuthenticationPrincipal
+      UserDetailsImpl userDetails) {
+    Long userId = userDetails == null ? null : userDetails.getUser().getId();
+    List<CommentResponseDto> commentResponseDtos = commentService.getReviewComments(reviewId,userId);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return ResponseEntity.ok().headers(headers).body(commentResponseDtos);

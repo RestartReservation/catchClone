@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface CommentRepositoryQuery {
   Optional<CommentResponseDto> responseCommentDtoByCommentId(Long commentId);
   List<CommentResponseDto> findCommentsByUserId(Long userId);
-  List<CommentResponseDto> findCommentsByReviewId(Long reviewId);
+  List<CommentResponseDto> findCommentsByReviewId(Long reviewId,Long lookUpUserId);
 }

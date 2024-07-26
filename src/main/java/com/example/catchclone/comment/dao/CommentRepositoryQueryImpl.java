@@ -12,6 +12,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Objects;
@@ -87,6 +88,12 @@ public class CommentRepositoryQueryImpl implements CommentRepositoryQuery{
   @Override
   @Transactional
   public List<CommentResponseDto> findCommentsByReviewId(Long reviewId,Long lookUpUserId) {
+    JPAQuery<CommentResponseDto> query = lookUpUserId == null ? queryIsNotLoggedIn(reviewId) : query(reviewId,lookUpUserId);
+    return query
+        .fetch();
+  }
+
+  private JPAQuery<CommentResponseDto> query(Long reviewId,Long lookUpUserId){
     return jpaQueryFactory
         .select(
             Projections.bean(
@@ -106,20 +113,46 @@ public class CommentRepositoryQueryImpl implements CommentRepositoryQuery{
                             .leftJoin(commentLike.comment)
                             .where(commentLikeEqByReviewId(reviewId)),
                         "likeCount")
-              ,ExpressionUtils.as(
-                JPAExpressions.selectOne()
-                    .from(commentLike)
-                    .where(commentLike.comment.id.eq(comment.id)
-                        .and(commentLike.user.id.eq(lookUpUserId)))
-                    .exists()
-                ,
-                "isLiked"
-            ))
+                ,ExpressionUtils.as(
+                    JPAExpressions.selectOne()
+                        .from(commentLike)
+                        .where(commentLike.comment.id.eq(comment.id)
+                            .and(commentLike.user.id.eq(lookUpUserId)))
+                        .exists()
+                    ,
+                    "isLiked"
+                ))
         )
         .from(comment)
         .leftJoin(user).on(user.id.eq(comment.userId))
-        .where(comment.review.id.eq(reviewId))
-        .fetch();
+        .where(comment.review.id.eq(reviewId));
+  }
+
+  private JPAQuery<CommentResponseDto> queryIsNotLoggedIn(Long reviewId){
+    return jpaQueryFactory
+        .select(
+            Projections.bean(
+                CommentResponseDto.class
+                ,comment.id
+                ,comment.userId
+                ,comment.commentContent
+                ,user.nickName
+                ,user.profileUrl
+                ,comment.createdAt
+                ,comment.parentId
+                ,comment.layer
+                , ExpressionUtils.as
+                    (
+                        JPAExpressions.select(Wildcard.count)
+                            .from(commentLike)
+                            .leftJoin(commentLike.comment)
+                            .where(commentLikeEqByReviewId(reviewId)),
+                        "likeCount")
+            )
+        )
+        .from(comment)
+        .leftJoin(user).on(user.id.eq(comment.userId))
+        .where(comment.review.id.eq(reviewId));
   }
 
   private BooleanExpression commentLikeEqByCommentId(Long commentId) {
